@@ -1,0 +1,289 @@
+openapi: 3.0.0
+
+info:
+  version: '0.3'
+  title: Мониторинг медицинского оборудования
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/koneek/MTK-Monitor/0.2
+  - url: http://localhost:8090/api/DevStat/v1
+    description: Песочница для DeviceAPI
+    
+paths:
+  /Power:
+    post:
+      summary: Сообщение от устройства о событии включения устройства
+      operationId: PowerPost
+      tags:
+        - Stats
+      requestBody:
+        required: true
+        content:
+          application/json;charset=UTF-8:
+            schema:
+              $ref: "#/components/schemas/Power"
+      responses:
+        '200':
+          "description": Подтверждение успешного сохранения
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/Power"
+        '400':
+          "description": Возвращает описание ошибки запроса
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /Mode:
+    post:
+      summary: Сообщение о том, что пользователь выбрал определенный режим функционирования или изменил какие-либо настройки работы аппарата
+      operationId: ModeSelected
+      tags:
+        - Stats
+      requestBody:
+        required: true
+        content:
+          application/json;charset=UTF-8:
+            schema:
+              $ref: "#/components/schemas/DeviceData"
+      responses:
+        '200':
+          "description": Подтверждение успешной операции
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/DeviceData"
+        '400':
+          "description": Возвращает описание ошибки запроса
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/Error" 
+                  
+  /Data:
+    post:
+      summary: Отправка дсведений о наработке аппарата
+      operationId: SendData
+      tags:
+        - Stats
+      requestBody:
+        required: true
+        content:
+          application/json;charset=UTF-8:
+            schema:
+              $ref: "#/components/schemas/DeviceData"
+      responses:
+        '200':
+          "description": Подтверждение успешной операции
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/DeviceData"
+        '400':
+          "description": Возвращает описание ошибки запроса
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/Error"  
+   
+  /Data/{guid}:  
+    delete:
+      summary: Удаление события от устройства
+      operationId: DataDelete
+      tags:
+        - Stats
+      parameters:
+        - name: guid
+          in: path
+          required: true
+          description: guid раннее отправленного события
+          schema:
+            type: string
+      responses:
+        '200':
+          "description": Подтверждение успешного удаления
+          content:
+            application/json: {}
+        '400':
+          "description": Возвращает описание ошибки запроса
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/Error"                 
+
+  /Firmwares/{deviceID}:
+    get:
+      summary: Запрос списка доступных для устройства прошивок
+      operationId: FirmwaresList
+      tags: 
+        - Device
+      parameters:
+        - name: deviceID
+          in: path
+          required: true
+          description: Идентификатор устройства
+          example: 42abcd2b-8b9c-4af9-88f7-0bc180cf74b4
+          schema:
+            type: string
+      responses:
+        '200':
+          "description":  Возвращается список доступных для устройства обновлений ПО
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Firmware"
+        '400':
+          "description": Возвращает описание ошибки запроса
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/Error"   
+
+  /Status:
+    post:
+      summary: Отправка данных о статусе работы аппарата (в реальной жизни скорее всего будет использоваться для пингов серевера)
+      operationId: SendStatus
+      tags:
+        - Stats
+      requestBody:
+        required: true
+        content:
+          application/json;charset=UTF-8:
+            schema:
+              $ref: "#/components/schemas/DeviceData"
+      responses:
+        '200':
+          description: Подтверждение успешной операции
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/DeviceData"
+        '400':
+          description: Возвращает описание ошибки запроса
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/Error"  
+
+  /Firmware/{id}:
+    get:
+      summary: Запрос новой версии, по номеру текущей версии
+      operationId: GetFirmaware
+      tags: 
+        - Device
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID требуемой прошивки
+          example: 25.1.16
+          schema:
+            type: string
+      responses:
+        '200':
+          "description": Подтверждение успешного сохранения
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/Firmware"
+        '400':
+          "description": Возвращает описание ошибки запроса
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/Error"   
+
+components:
+  schemas:
+    StatHeader:
+      type: object
+      required:
+        - GUID
+        - DeviceID
+        - DeviceDTime
+        - UserID
+      properties:
+        GUID:
+          description: Идентификатор запроса
+          type: string
+          example: 42abcd2b-8b9c-4af9-88f7-0bc180cf74b4
+        DeviceID:
+          description: Сквозной идентификатор устройства
+          type: integer
+          format: int64
+          example: 55
+        DeviceDTime:
+          description: Дата и времяб часов на устройстве
+          type: string
+          format: dateTime
+          example: 2022-07-01T15:00:00+01
+        UserID:
+          description: Идентификатор пользователя на устройстве
+          type: integer
+          format: int32
+          example: 55
+          
+    Power:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/StatHeader'
+        - required:
+          - power
+      properties:
+        power:
+          description: Или включено или выключено
+          type: string            
+          enum: [on, off]
+          example: on
+
+    DeviceData:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/StatHeader'
+        - required:
+          - DeviceData
+      properties:
+        DeviceData:
+          description: Массив данных от устройства. Каждая строка цикла - отдельный эелемент массива, который будет собираться информацию о цикле непосредственно в ХД
+          type: array
+          items: 
+            type: string
+          example: ['старт','стоп']
+
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+          
+    Firmware:
+      type: object
+      required:
+        - firm_date
+        - version
+        - firm_name
+        - link
+        - id
+      properties:
+        firm_date:
+          type: string
+          format: dateTime
+          example: 2022-07-01T15:00:00+01
+        version:
+          type: string
+        firm_name:
+          type: string
+        link:
+          type: string
+        id:
+          type: integer
