@@ -3,10 +3,25 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use Faker\Generator;
+use Illuminate\Container\Container;
 use Illuminate\Http\Request;
+use Faker\Factory;
 
 class DeviceController extends Controller
 {
+    /**
+     * The current Faker instance.
+     *
+     * @var Generator
+     */
+    protected Generator $faker;
+
+    public function __construct()
+    {
+        $this->faker = Container::getInstance()->make(Generator::class);
+    }
+
     /**
      * @OA\Post(
      *     path="/api/v1/power",
@@ -32,9 +47,15 @@ class DeviceController extends Controller
      *     ),
      * )
      */
-    public function power(): string
+    public function power(): array
     {
-        return 'PowerPost';
+        return [
+            "GUID" => $this->faker->uuid,
+            "DeviceID" => $this->faker->numberBetween(1, 100),
+            'DeviceDTime' => $this->faker->date("Y-m-d\TH:i:sP"),
+            "UserID" => $this->faker->numberBetween(1, 100),
+            "power" => $this->faker->randomElement(["on", "off"])
+        ];
     }
 
     /**
@@ -62,9 +83,15 @@ class DeviceController extends Controller
      *     ),
      * )
      */
-    public function mode(): string
+    public function mode(): array
     {
-        return 'ModeSelected';
+        return [
+            "GUID" => $this->faker->uuid,
+            "DeviceID" => $this->faker->numberBetween(1, 100),
+            'DeviceDTime' => $this->faker->date("Y-m-d\TH:i:sP"),
+            "UserID" => $this->faker->numberBetween(1, 100),
+            "DeviceData" => $this->faker->shuffleArray(['старт', 'стоп'])
+        ];
     }
 
     /**
@@ -92,9 +119,15 @@ class DeviceController extends Controller
      *     ),
      * )
      */
-    public function data(): string
+    public function data(): array
     {
-        return 'SendData';
+        return [
+            "GUID" => $this->faker->uuid,
+            "DeviceID" => $this->faker->numberBetween(1, 100),
+            'DeviceDTime' => $this->faker->date("Y-m-d\TH:i:sP"),
+            "UserID" => $this->faker->numberBetween(1, 100),
+            "DeviceData" => $this->faker->shuffleArray(['старт', 'стоп'])
+        ];
     }
 
     /**
@@ -125,9 +158,9 @@ class DeviceController extends Controller
      *     ),
      * )
      */
-    public function delete(string $guid): string
+    public function delete(string $guid): object
     {
-        return 'DataDelete';
+        return (object)[];
     }
 
     /**
@@ -160,9 +193,21 @@ class DeviceController extends Controller
      *     ),
      * )
      */
-    public function firmwares(string $deviceID): string
+    public function firmwares(string $deviceID): array
     {
-        return 'FirmwaresList';
+        $firmwares = [];
+
+        for ($i = 0; $i <= $this->faker->numberBetween(1, 10); $i++) {
+            $firmwares[] = [
+                'firm_date' => $this->faker->date("Y-m-d\TH:i:sP"),
+                'version' => $this->faker->numberBetween(1, 10) . '.' . $this->faker->numberBetween(1, 30) . '.' . $this->faker->numberBetween(1, 50),
+                'firm_name' => $this->faker->randomElement(["UI", "Memory", "Driver"]),
+                'link' => $this->faker->url,
+                'id' => $deviceID
+            ];
+        }
+
+        return $firmwares;
     }
 
     /**
@@ -190,9 +235,15 @@ class DeviceController extends Controller
      *     ),
      * )
      */
-    public function status(): string
+    public function status(): array
     {
-        return 'SendStatus';
+        return [
+            "GUID" => $this->faker->uuid,
+            "DeviceID" => $this->faker->numberBetween(1, 100),
+            'DeviceDTime' => $this->faker->date("Y-m-d\TH:i:sP"),
+            "UserID" => $this->faker->numberBetween(1, 100),
+            "DeviceData" => $this->faker->shuffleArray(['старт', 'стоп'])
+        ];
     }
 
     /**
@@ -215,7 +266,7 @@ class DeviceController extends Controller
      *         response="200",
      *         description="Подтверждение успешного сохранения",
      *         content = "application/json;charset=UTF-8",
-     *         @OA\Schema(type="array", items=$ref: "#/components/schemas/Firmware")
+     *         @OA\Schema(items=$ref: "#/components/schemas/Firmware")
      *     ),
      *     @OA\Response(
      *         response="400",
@@ -225,9 +276,15 @@ class DeviceController extends Controller
      *     ),
      * )
      */
-    public function firmware(string $id): string
+    public function firmware(string $id): array
     {
-        return 'GetFirmaware';
+        return [
+            'firm_date' => $this->faker->date("Y-m-d\TH:i:sP"),
+            'version' => $this->faker->numberBetween(1, 10) . '.' . $this->faker->numberBetween(1, 30) . '.' . $this->faker->numberBetween(1, 50),
+            'firm_name' => $this->faker->randomElement(["UI", "Memory", "Driver"]),
+            'link' => $this->faker->url,
+            'id' => $id
+        ];
     }
 }
 
