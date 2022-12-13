@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\IndexResource;
+use App\Http\Resources\ValidationErrorResource;
 use Faker\Generator;
 use Illuminate\Container\Container;
 use Illuminate\Http\Request;
 use Faker\Factory;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class DeviceController extends Controller
 {
@@ -47,8 +51,22 @@ class DeviceController extends Controller
      *     ),
      * )
      */
-    public function power(): array
+    public function power(Request $request): array
     {
+        $validator = Validator::make($request->all(), [
+            'GUID' => 'string',
+            'DeviceID' => 'int',
+            'DeviceDTime' => 'string',
+            'UserID' => 'int',
+            'power' => ['required', Rule::in(["on", "off"])]
+        ]);
+
+        if ($validator->fails()) {
+            return [
+                'validator' => $validator->messages()
+            ];
+        }
+
         return [
             "GUID" => $this->faker->uuid,
             "DeviceID" => $this->faker->numberBetween(1, 100),
@@ -83,8 +101,23 @@ class DeviceController extends Controller
      *     ),
      * )
      */
-    public function mode(): array
+    public function mode(Request $request): array
     {
+        $validator = Validator::make($request->all(), [
+            'GUID' => 'string',
+            'DeviceID' => 'int',
+            'DeviceDTime' => 'string',
+            'UserID' => 'int',
+            'DeviceData' => 'required|array',
+            'DeviceData.*' => Rule::in(['старт','стоп'])
+        ]);
+
+        if ($validator->fails()) {
+            return [
+                'validator' => $validator->messages()
+            ];
+        }
+
         return [
             "GUID" => $this->faker->uuid,
             "DeviceID" => $this->faker->numberBetween(1, 100),
@@ -119,8 +152,23 @@ class DeviceController extends Controller
      *     ),
      * )
      */
-    public function data(): array
+    public function data(Request $request): array
     {
+        $validator = Validator::make($request->all(), [
+            'GUID' => 'string',
+            'DeviceID' => 'int',
+            'DeviceDTime' => 'string',
+            'UserID' => 'int',
+            'DeviceData' => 'required|array',
+            'DeviceData.*' => Rule::in(['старт','стоп'])
+        ]);
+
+        if ($validator->fails()) {
+            return [
+                'validator' => $validator->messages()
+            ];
+        }
+
         return [
             "GUID" => $this->faker->uuid,
             "DeviceID" => $this->faker->numberBetween(1, 100),
@@ -235,8 +283,23 @@ class DeviceController extends Controller
      *     ),
      * )
      */
-    public function status(): array
+    public function status(Request $request): array
     {
+        $validator = Validator::make($request->all(), [
+            'GUID' => 'string',
+            'DeviceID' => 'int',
+            'DeviceDTime' => 'string',
+            'UserID' => 'int',
+            'DeviceData' => 'required|array',
+            'DeviceData.*' => Rule::in(['старт','стоп'])
+        ]);
+
+        if ($validator->fails()) {
+            return [
+                'validator' => $validator->messages()
+            ];
+        }
+
         return [
             "GUID" => $this->faker->uuid,
             "DeviceID" => $this->faker->numberBetween(1, 100),
