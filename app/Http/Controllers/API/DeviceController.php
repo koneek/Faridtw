@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\IndexResource;
-use App\Http\Resources\ValidationErrorResource;
+use App\Models\DeviceData;
 use Faker\Generator;
 use Illuminate\Container\Container;
 use Illuminate\Http\Request;
@@ -109,7 +108,7 @@ class DeviceController extends Controller
             'DeviceDTime' => 'string',
             'UserID' => 'int',
             'DeviceData' => 'required|array',
-            'DeviceData.*' => Rule::in(['старт','стоп'])
+            'DeviceData.*' => Rule::in(['старт', 'стоп'])
         ]);
 
         if ($validator->fails()) {
@@ -160,7 +159,7 @@ class DeviceController extends Controller
             'DeviceDTime' => 'string',
             'UserID' => 'int',
             'DeviceData' => 'required|array',
-            'DeviceData.*' => Rule::in(['старт','стоп'])
+            'DeviceData.*' => Rule::in(['старт', 'стоп'])
         ]);
 
         if ($validator->fails()) {
@@ -168,6 +167,14 @@ class DeviceController extends Controller
                 'validator' => $validator->messages()
             ];
         }
+
+        DeviceData::create([
+            'guid' => $request->get('GUID'),
+            'device_id' => $request->get('DeviceID'),
+            'device_d_time' => $request->get('DeviceDTime'),
+            'user_id' => $request->get('UserID'),
+            'device_data' => $request->get('DeviceData'),
+        ]);
 
         return [
             "GUID" => $this->faker->uuid,
@@ -291,7 +298,7 @@ class DeviceController extends Controller
             'DeviceDTime' => 'string',
             'UserID' => 'int',
             'DeviceData' => 'required|array',
-            'DeviceData.*' => Rule::in(['старт','стоп'])
+            'DeviceData.*' => Rule::in(['старт', 'стоп'])
         ]);
 
         if ($validator->fails()) {
@@ -299,6 +306,14 @@ class DeviceController extends Controller
                 'validator' => $validator->messages()
             ];
         }
+
+        DeviceData::create([
+            'guid' => $request->get('GUID'),
+            'device_id' => $request->get('DeviceID'),
+            'device_d_time' => $request->get('DeviceDTime'),
+            'user_id' => $request->get('UserID'),
+            'device_data' => $request->get('DeviceData'),
+        ]);
 
         return [
             "GUID" => $this->faker->uuid,
