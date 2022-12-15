@@ -46,6 +46,11 @@
             <h3>{{ $deviceData->user_id }}</h3>
             <hr>
         </td>
+        <td>
+            <p>Data Type</p>
+            <h3>{{ $deviceData->type }}</h3>
+            <hr>
+        </td>
     </tr>
     <tr>
         <th>Device Data</th>
@@ -53,9 +58,9 @@
     </thead>
     <tbody>
     @if (!is_null($deviceData->device_data))
-        @foreach($deviceData->device_data as $key => $deviceData)
+        @foreach($deviceData->device_data as $item)
             <tr>
-                <td>{{ $key }}</td>
+                <td>{{ $item }}</td>
             </tr>
         @endforeach
     @else

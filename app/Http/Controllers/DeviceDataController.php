@@ -33,6 +33,9 @@ class DeviceDataController extends Controller
         if (isset($data['user_id'])) {
             $query->where('user_id', $request->get('user_id'));
         }
+        if (isset($data['type'])) {
+            $query->where('type', $request->get('type'));
+        }
 
         return view("DeviceData.index", ["deviceData" => $query->get()]);
     }

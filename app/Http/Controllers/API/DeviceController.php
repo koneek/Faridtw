@@ -53,9 +53,9 @@ class DeviceController extends Controller
     public function power(Request $request): array
     {
         $validator = Validator::make($request->all(), [
-            'GUID' => 'string',
-            'DeviceID' => 'int',
-            'DeviceDTime' => 'string',
+            'GUID' => 'required|string',
+            'DeviceID' => 'required|int',
+            'DeviceDTime' => 'required|string',
             'UserID' => 'int',
             'power' => ['required', Rule::in(["on", "off"])]
         ]);
@@ -103,12 +103,11 @@ class DeviceController extends Controller
     public function mode(Request $request): array
     {
         $validator = Validator::make($request->all(), [
-            'GUID' => 'string',
-            'DeviceID' => 'int',
-            'DeviceDTime' => 'string',
+            'GUID' => 'required|string',
+            'DeviceID' => 'required|int',
+            'DeviceDTime' => 'required|string',
             'UserID' => 'int',
             'DeviceData' => 'required|array',
-            'DeviceData.*' => Rule::in(['старт', 'стоп'])
         ]);
 
         if ($validator->fails()) {
@@ -154,12 +153,11 @@ class DeviceController extends Controller
     public function data(Request $request): array
     {
         $validator = Validator::make($request->all(), [
-            'GUID' => 'string',
-            'DeviceID' => 'int',
-            'DeviceDTime' => 'string',
-            'UserID' => 'int',
+            'GUID' => 'required|string',
+            'DeviceID' => 'required|int', // у нас в базе
+            'DeviceDTime' => 'required|string', // от клиента
+            'UserID' => 'int', //пока null
             'DeviceData' => 'required|array',
-            'DeviceData.*' => Rule::in(['старт', 'стоп'])
         ]);
 
         if ($validator->fails()) {
@@ -172,7 +170,7 @@ class DeviceController extends Controller
             'guid' => $request->get('GUID'),
             'device_id' => $request->get('DeviceID'),
             'device_d_time' => $request->get('DeviceDTime'),
-            'user_id' => $request->get('UserID'),
+            'type' => 'sensor',
             'device_data' => $request->get('DeviceData'),
         ]);
 
@@ -293,12 +291,11 @@ class DeviceController extends Controller
     public function status(Request $request): array
     {
         $validator = Validator::make($request->all(), [
-            'GUID' => 'string',
-            'DeviceID' => 'int',
-            'DeviceDTime' => 'string',
+            'GUID' => 'required|string',
+            'DeviceID' => 'required|int',
+            'DeviceDTime' => 'required|string',
             'UserID' => 'int',
             'DeviceData' => 'required|array',
-            'DeviceData.*' => Rule::in(['старт', 'стоп'])
         ]);
 
         if ($validator->fails()) {
@@ -311,7 +308,7 @@ class DeviceController extends Controller
             'guid' => $request->get('GUID'),
             'device_id' => $request->get('DeviceID'),
             'device_d_time' => $request->get('DeviceDTime'),
-            'user_id' => $request->get('UserID'),
+            'type' => 'log',
             'device_data' => $request->get('DeviceData'),
         ]);
 

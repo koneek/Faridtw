@@ -19,6 +19,7 @@ class DeviceData extends Model
         'device_id',
         'device_d_time',
         'user_id',
+        'type',
         'device_data',
     ];
 

@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('guid');
             $table->integer('device_id');
             $table->string('device_d_time');
-            $table->integer('user_id');
+            $table->integer('user_id')->nullable();
+            $table->string('type');
             $table->json('device_data')->nullable();
             $table->timestamps();
             $table->softDeletes();

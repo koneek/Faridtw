@@ -24,14 +24,23 @@
 <h2>Filter</h2>
 
 <form action="{{ route('device-data.index') }}">
-    <label for="guid">GUID:</label><br><br>
+    <label for="guid">GUID:</label><br>
     <input type="text" id="guid" name="guid"><br><br>
-    <label for="device_id">Device ID:</label><br><br>
+
+    <label for="device_id">Device ID:</label><br>
     <input type="text" id="device_id" name="device_id"><br><br>
-    <label for="device_d_time">Device D Time:</label><br><br>
+
+    <label for="device_d_time">Device D Time:</label><br>
     <input type="text" id="device_d_time" name="device_d_time"><br><br>
-    <label for="user_id">User ID:</label><br><br>
+
+    <label for="user_id">User ID:</label><br>
     <input type="text" id="user_id" name="user_id"><br><br>
+
+    <input type="radio" id="log" name="type" value="log">
+    <label for="log">Log</label><br><br>
+    <input type="radio" id="sensor" name="type" value="sensor">
+    <label for="sensor">Sensor</label><br><br>
+
     <input type="submit" value="Submit">
 </form>
 
@@ -43,6 +52,7 @@
         <th>Device ID</th>
         <th>Device D Time</th>
         <th>User ID</th>
+        <th>Data Type</th>
         <th>Deleted</th>
         <th>Actions</th>
     </tr>
@@ -52,6 +62,7 @@
             <td>{{ $item->device_id }}</td>
             <td>{{ $item->device_d_time }}</td>
             <td>{{ $item->user_id }}</td>
+            <td>{{ $item->type }}</td>
             <td>
                 @if (is_null($item->deleted_at))
                     Yes
