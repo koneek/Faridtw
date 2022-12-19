@@ -3,13 +3,17 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cycle;
 use App\Models\DeviceData;
+use App\Models\SensorData;
+use App\Models\Stage;
 use Faker\Generator;
 use Illuminate\Container\Container;
 use Illuminate\Http\Request;
 use Faker\Factory;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use NunoMaduro\Collision\Adapters\Phpunit\State;
 
 class DeviceController extends Controller
 {
@@ -65,6 +69,14 @@ class DeviceController extends Controller
                 'validator' => $validator->messages()
             ];
         }
+
+        DeviceData::create([
+            'guid' => $request->get('GUID'),
+            'device_id' => $request->get('DeviceID'),
+            'device_d_time' => $request->get('DeviceDTime'),
+            'type' => 'log',
+            'device_data' => ["power: " . $request->get('power')],
+        ]);
 
         return [
             "GUID" => $this->faker->uuid,
@@ -172,6 +184,16 @@ class DeviceController extends Controller
             'device_d_time' => $request->get('DeviceDTime'),
             'type' => 'sensor',
             'device_data' => $request->get('DeviceData'),
+        ]);
+
+        $data = $request->get('DeviceData');
+
+        SensorData::create([
+           'device_id' => $request->get('DeviceID'),
+           'cycle_id' => 1, //как мы привяжем к cycle_id?
+           'row_id' => $data[0],
+           'date_time' => $data[1],
+           'row_data' => array_slice($data, 2),
         ]);
 
         return [
@@ -310,6 +332,68 @@ class DeviceController extends Controller
             'device_d_time' => $request->get('DeviceDTime'),
             'type' => 'log',
             'device_data' => $request->get('DeviceData'),
+        ]);
+
+        $number = '';
+        $stages = [];
+        $stageCurrentIndex = 0;
+        $stageState = false;
+        $stageEndedIndex = -10;
+
+        foreach ($request->get('DeviceData') as $key => $row) {
+            if (strpos($row, 'Длинный цикл') !== false) {
+                $x = strpos($row, "Длинный цикл");
+                $number = mb_substr($row, $x+13);
+                preg_match_all('/\[(.*?)\]/', $row, $matches_ended_at);
+                $cycleStartedAt = date("Y:m:d") . " " . $matches_ended_at[1][0];
+            } else if (strpos($row, '--- Стадия') !== false && strpos($row, 'завершена ---') === false) {
+                preg_match_all('/--- Стадия (.*?) ---/', $row, $matches_name);
+                preg_match_all('/\[(.*?)\]/', $row, $matches_started_at);
+                $stages[] = [
+                  'name' => $matches_name[1][0],
+                  'started_at' => date("Y:m:d") . " " . $matches_started_at[1][0],
+//                  'started_at' => $row,
+                ];
+                $stageCurrentIndex = count($stages) - 1;
+                $stageState = true;
+            } else if (strpos($row, '--- Стадия') !== false && strpos($row, 'завершена ---') !== false) {
+                preg_match_all('/\[(.*?)\]/', $row, $matches_ended_at);
+                $stageEndedIndex = $key;
+//                $stages[$stageCurrentIndex]['ended_at'] = $row;
+                $stages[$stageCurrentIndex]['ended_at'] = date("Y:m:d") . " " . $matches_ended_at[1][0];
+            } else if ($stageEndedIndex === $key-1) {
+                $stageEndedIndex = -10;
+                $stageState = false;
+            } else if (count($stages) > 0 && $stageState) {
+                $stages[$stageCurrentIndex]['data'][] = $row;
+            } else if (strpos($row, '[19:53:45] Cycle end') !== false) {
+                preg_match_all('/\[(.*?)\]/', $row, $matches_ended_at);
+                $cycleEndedAt = date("Y:m:d") . " " . $matches_ended_at[1][0];
+            } else if (strpos($row, 'Общее время работы: ') !== false) {
+                preg_match_all('/Общее время работы: (.*?) cек./', $row, $matches_duration);
+                $cycleDuration = $matches_duration[1][0];
+            }
+        }
+
+        $cycle = Cycle::create([
+            'number' => $number,
+            'started_at' => $cycleStartedAt,
+            'ended_at' => $cycleEndedAt,
+            'duration' => $cycleDuration,
+            'status' => 1,
+        ]);
+
+        foreach ($stages as $stage) {
+            Stage::create(array_merge($stage, ['cycle_id' => $cycle->id]));
+        }
+
+        dd([
+            'number' => $number,
+            'started_at' => $cycleStartedAt,
+            'ended_at' => $cycleEndedAt,
+            'duration' => $cycleDuration,
+            'status' => 'ended',
+            'stages' => $stages,
         ]);
 
         return [
