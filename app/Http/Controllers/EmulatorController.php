@@ -22,23 +22,23 @@ class EmulatorController extends Controller
     public function emulate(Request $request)
     {
         $request->validate([
-            'file' => 'required|mimes:pdf,xlxs,xlx,docx,doc,csv,txt,png,gif,jpg,jpeg|max:2048',
+            'file' => 'required|mimes:log,txt',
         ]);
 
         $fileName = $request->file->getClientOriginalName();
         $filePath = 'uploads/' . $fileName;
         Storage::disk('public')->put($filePath, file_get_contents($request->file));
 
+        $method = $request->get('method');
+
         $device_data = [];
         $handle = fopen("storage/" . $filePath, "r");
         if ($handle) {
             while (($line = fgets($handle)) !== false) {
-                $device_data[] = $line;
+                $device_data[] = $method==='data' ? preg_split('/\s+/', $line) : $line;
             }
             fclose($handle);
         }
-
-        $method = $request->get('method');
 
         $data = [];
 
@@ -47,11 +47,10 @@ class EmulatorController extends Controller
         $data['DeviceDTime'] = $request->get('device_d_time');
         $data['DeviceData'] = $device_data;
 
-
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://mtk-mon.loc/api/status',
+            CURLOPT_URL => 'http://mtk-mon.loc/api/' . $method,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -68,13 +67,15 @@ class EmulatorController extends Controller
         $response = curl_exec($curl);
 
         curl_close($curl);
-        echo $response;
+//        echo $response;
+//
+//        dd($method, $data);
+//
+//        dd(123);
+//        dd($x);
+//        dd($request->all());
 
-        dd($method, $data);
-
-        dd(123);
-        dd($x);
-        dd($request->all());
+        return $response;
 
         return view("Emulator.index");
     }

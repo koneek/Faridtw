@@ -44,7 +44,7 @@
             <div class="ibox-content" style="">
                 <h3>Filter</h3>
 
-                <form action="{{ route('device-data.index') }}">
+                <form action="{{ route('cycles.index') }}">
                     <label for="guid">GUID:</label><br>
                     <input type="text" id="guid" name="guid"><br><br>
 
@@ -56,11 +56,6 @@
 
                     <label for="user_id">User ID:</label><br>
                     <input type="text" id="user_id" name="user_id"><br><br>
-
-                    {{--    <input type="radio" id="log" name="type" value="log">--}}
-                    {{--    <label for="log">Log</label><br><br>--}}
-                    {{--    <input type="radio" id="sensor" name="type" value="sensor">--}}
-                    {{--    <label for="sensor">Sensor</label><br><br>--}}
 
                     <select class="form-control m-b" name="type">
                         <option value="log">Log</option>
@@ -74,21 +69,21 @@
 
                 <table>
                     <tr>
-                        <th>GUID</th>
-                        <th>Device ID</th>
-                        <th>Device D Time</th>
-                        <th>User ID</th>
-                        <th>Data Type</th>
+                        <th>Number</th>
+                        <th>Started at</th>
+                        <th>Ended at</th>
+                        <th>Duration</th>
+                        <th>Status</th>
                         <th>Deleted</th>
                         <th>Actions</th>
                     </tr>
-                    @foreach($deviceData as $item)
+                    @foreach($cycles as $item)
                         <tr>
-                            <td>{{ $item->guid }}</td>
-                            <td>{{ $item->device_id }}</td>
-                            <td>{{ $item->device_d_time }}</td>
-                            <td>{{ $item->user_id }}</td>
-                            <td>{{ $item->type }}</td>
+                            <td>{{ $item->number }}</td>
+                            <td>{{ $item->started_at }}</td>
+                            <td>{{ $item->ended_at }}</td>
+                            <td>{{ $item->duration }}</td>
+                            <td>{{ $item->status }}</td>
                             <td>
                                 @if (is_null($item->deleted_at))
                                     No
@@ -96,7 +91,7 @@
                                     Yes
                                 @endif
                             </td>
-                            <td><a target="_blank" href="/device-data/{{$item->id}}">{{ "device data" }}</a>
+                            <td><a target="_blank" href="/cycles/{{$item->id}}">stages</a>
                             </td>
                         </tr>
                     @endforeach

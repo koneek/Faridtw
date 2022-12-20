@@ -25,7 +25,7 @@
     <div class="col-lg-12">
         <div class="ibox">
             <div class="ibox-title">
-                <h2>Device Data</h2>
+                <h2>Sensor Data</h2>
                 <div class="ibox-tools">
                     <a class="collapse-link">
                         <i class="fa fa-chevron-up"></i>
@@ -44,23 +44,18 @@
             <div class="ibox-content" style="">
                 <h3>Filter</h3>
 
-                <form action="{{ route('device-data.index') }}">
+                <form action="{{ route('sensor-data.index') }}">
                     <label for="guid">GUID:</label><br>
                     <input type="text" id="guid" name="guid"><br><br>
 
-                    <label for="device_id">Device ID:</label><br>
-                    <input type="text" id="device_id" name="device_id"><br><br>
+                    <label for="sensor_id">Sensor ID:</label><br>
+                    <input type="text" id="sensor_id" name="sensor_id"><br><br>
 
-                    <label for="device_d_time">Device D Time:</label><br>
-                    <input type="text" id="device_d_time" name="device_d_time"><br><br>
+                    <label for="sensor_d_time">Sensor D Time:</label><br>
+                    <input type="text" id="sensor_d_time" name="sensor_d_time"><br><br>
 
                     <label for="user_id">User ID:</label><br>
                     <input type="text" id="user_id" name="user_id"><br><br>
-
-                    {{--    <input type="radio" id="log" name="type" value="log">--}}
-                    {{--    <label for="log">Log</label><br><br>--}}
-                    {{--    <input type="radio" id="sensor" name="type" value="sensor">--}}
-                    {{--    <label for="sensor">Sensor</label><br><br>--}}
 
                     <select class="form-control m-b" name="type">
                         <option value="log">Log</option>
@@ -74,21 +69,19 @@
 
                 <table>
                     <tr>
-                        <th>GUID</th>
                         <th>Device ID</th>
-                        <th>Device D Time</th>
-                        <th>User ID</th>
-                        <th>Data Type</th>
+                        <th>Cycle ID</th>
+                        <th>Row ID</th>
+                        <th>Date Time</th>
                         <th>Deleted</th>
                         <th>Actions</th>
                     </tr>
-                    @foreach($deviceData as $item)
+                    @foreach($sensorData as $item)
                         <tr>
-                            <td>{{ $item->guid }}</td>
                             <td>{{ $item->device_id }}</td>
-                            <td>{{ $item->device_d_time }}</td>
-                            <td>{{ $item->user_id }}</td>
-                            <td>{{ $item->type }}</td>
+                            <td>{{ $item->cycle_id }}</td>
+                            <td>{{ $item->row_id }}</td>
+                            <td>{{ $item->date_time }}</td>
                             <td>
                                 @if (is_null($item->deleted_at))
                                     No
@@ -96,7 +89,7 @@
                                     Yes
                                 @endif
                             </td>
-                            <td><a target="_blank" href="/device-data/{{$item->id}}">{{ "device data" }}</a>
+                            <td><a target="_blank" href="/sensor-data/{{$item->id}}">{{ "sensor data" }}</a>
                             </td>
                         </tr>
                     @endforeach

@@ -15,10 +15,10 @@ return new class extends Migration
     {
         Schema::create('sensor_data', function (Blueprint $table) {
             $table->id();
-            $table->integer('device_id');
-            $table->foreignId('cycle_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->integer('row_id');
-            $table->dateTime('date_time');
+            $table->integer('device_id')->nullable();
+            $table->foreignId('cycle_id')->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->integer('row_id')->nullable();
+            $table->dateTime('date_time')->nullable();
             $table->json('row_data')->nullable();
             $table->timestamps();
             $table->softDeletes();

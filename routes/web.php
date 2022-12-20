@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\CycleController;
 use App\Http\Controllers\DeviceDataController;
+use App\Http\Controllers\SensorDataController;
 use App\Http\Controllers\EmulatorController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,8 +21,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::resource('cycles', CycleController::class);
 Route::resource('device-data', DeviceDataController::class);
+Route::resource('sensor-data', SensorDataController::class);
+
 Route::get('emulator', [EmulatorController::class, 'index']);
-//Route::get('emulate', [EmulatorController::class, 'emulate'])->name('emulate');
-//Route::post('/upload-file', [EmulatorController::class, 'fileUpload'])->name('fileUpload');
 Route::post('file-upload', [ EmulatorController::class, 'emulate' ])->name('emulate');
+

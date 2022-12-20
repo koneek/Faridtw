@@ -188,13 +188,15 @@ class DeviceController extends Controller
 
         $data = $request->get('DeviceData');
 
-        SensorData::create([
-           'device_id' => $request->get('DeviceID'),
-           'cycle_id' => 1, //как мы привяжем к cycle_id?
-           'row_id' => $data[0],
-           'date_time' => $data[1],
-           'row_data' => array_slice($data, 2),
-        ]);
+        foreach ($data as $item) {
+            SensorData::create([
+                'device_id' => $request->get('DeviceID'),
+                'cycle_id' => null, //как мы привяжем к cycle_id?
+                'row_id' => $item[0],
+                'date_time' => "2022-12-20 08:20:51", // $item[1],
+                'row_data' => array_slice($item, 2),
+            ]);
+        }
 
         return [
             "GUID" => $this->faker->uuid,
@@ -350,7 +352,8 @@ class DeviceController extends Controller
                 preg_match_all('/--- Стадия (.*?) ---/', $row, $matches_name);
                 preg_match_all('/\[(.*?)\]/', $row, $matches_started_at);
                 $stages[] = [
-                  'name' => $matches_name[1][0],
+                  'number' => count($stages) + 1,
+                  'name' => trim($matches_name[1][0], '"'),
                   'started_at' => date("Y:m:d") . " " . $matches_started_at[1][0],
 //                  'started_at' => $row,
                 ];

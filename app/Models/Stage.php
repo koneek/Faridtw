@@ -15,6 +15,7 @@ class Stage extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'number',
         'name',
         'started_at',
         'ended_at',
