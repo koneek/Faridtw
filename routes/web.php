@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DeviceDataController;
+use App\Http\Controllers\EmulatorController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,3 +20,7 @@ Route::get('/', function () {
 });
 
 Route::resource('device-data', DeviceDataController::class);
+Route::get('emulator', [EmulatorController::class, 'index']);
+//Route::get('emulate', [EmulatorController::class, 'emulate'])->name('emulate');
+//Route::post('/upload-file', [EmulatorController::class, 'fileUpload'])->name('fileUpload');
+Route::post('file-upload', [ EmulatorController::class, 'emulate' ])->name('emulate');

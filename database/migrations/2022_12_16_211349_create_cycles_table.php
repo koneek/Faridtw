@@ -15,11 +15,11 @@ return new class extends Migration
     {
         Schema::create('cycles', function (Blueprint $table) {
             $table->id();
-            $table->integer('number');
-            $table->dateTime('started_at');
-            $table->dateTime('ended_at');
-            $table->integer('duration');
-            $table->integer('status');
+            $table->integer('number')->nullable();
+            $table->dateTime('started_at')->nullable();
+            $table->dateTime('ended_at')->nullable();
+            $table->integer('duration')->nullable();
+            $table->integer('status')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

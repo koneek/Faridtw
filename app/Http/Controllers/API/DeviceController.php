@@ -346,7 +346,7 @@ class DeviceController extends Controller
                 $number = mb_substr($row, $x+13);
                 preg_match_all('/\[(.*?)\]/', $row, $matches_ended_at);
                 $cycleStartedAt = date("Y:m:d") . " " . $matches_ended_at[1][0];
-            } else if (strpos($row, '--- Стадия') !== false && strpos($row, 'завершена ---') === false) {
+            } else if (mb_strpos($row, '--- Стадия') !== false && (mb_strpos($row, 'завершена ---') === false && mb_strpos($row, 'Завершена ---') === false)) {
                 preg_match_all('/--- Стадия (.*?) ---/', $row, $matches_name);
                 preg_match_all('/\[(.*?)\]/', $row, $matches_started_at);
                 $stages[] = [
@@ -356,7 +356,7 @@ class DeviceController extends Controller
                 ];
                 $stageCurrentIndex = count($stages) - 1;
                 $stageState = true;
-            } else if (strpos($row, '--- Стадия') !== false && strpos($row, 'завершена ---') !== false) {
+            } else if (mb_strpos($row, '--- Стадия') !== false && (mb_strpos($row, 'завершена ---') !== false || mb_strpos($row, 'Завершена ---') !== false)) {
                 preg_match_all('/\[(.*?)\]/', $row, $matches_ended_at);
                 $stageEndedIndex = $key;
 //                $stages[$stageCurrentIndex]['ended_at'] = $row;
@@ -366,7 +366,7 @@ class DeviceController extends Controller
                 $stageState = false;
             } else if (count($stages) > 0 && $stageState) {
                 $stages[$stageCurrentIndex]['data'][] = $row;
-            } else if (strpos($row, '[19:53:45] Cycle end') !== false) {
+            } else if (strpos($row, 'Cycle end') !== false) {
                 preg_match_all('/\[(.*?)\]/', $row, $matches_ended_at);
                 $cycleEndedAt = date("Y:m:d") . " " . $matches_ended_at[1][0];
             } else if (strpos($row, 'Общее время работы: ') !== false) {
@@ -378,8 +378,8 @@ class DeviceController extends Controller
         $cycle = Cycle::create([
             'number' => $number,
             'started_at' => $cycleStartedAt,
-            'ended_at' => $cycleEndedAt,
-            'duration' => $cycleDuration,
+            'ended_at' => $cycleEndedAt ?? null,
+            'duration' => $cycleDuration ?? null,
             'status' => 1,
         ]);
 
@@ -387,14 +387,14 @@ class DeviceController extends Controller
             Stage::create(array_merge($stage, ['cycle_id' => $cycle->id]));
         }
 
-        dd([
-            'number' => $number,
-            'started_at' => $cycleStartedAt,
-            'ended_at' => $cycleEndedAt,
-            'duration' => $cycleDuration,
-            'status' => 'ended',
-            'stages' => $stages,
-        ]);
+//        dd([
+//            'number' => $number,
+//            'started_at' => $cycleStartedAt,
+//            'ended_at' => $cycleEndedAt,
+//            'duration' => $cycleDuration ?? null,
+//            'status' => 'ended',
+//            'stages' => $stages,
+//        ]);
 
         return [
             "GUID" => $this->faker->uuid,

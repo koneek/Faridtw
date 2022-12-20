@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('stages', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->dateTime('started_at');
-            $table->dateTime('ended_at');
+            $table->string('name')->nullable();
+            $table->dateTime('started_at')->nullable();
+            $table->dateTime('ended_at')->nullable();
             $table->foreignId('cycle_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->json('data')->nullable();
             $table->timestamps();
