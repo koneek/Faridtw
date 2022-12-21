@@ -59,6 +59,7 @@
         <th>Название</th>
         <th>Начало</th>
         <th>Завершение</th>
+        <th>События</th>
     </tr>
     </thead>
     <tbody>
@@ -68,6 +69,7 @@
                 <td>{{ $item->name }}</td>
                 <td>{{ $item->started_at }}</td>
                 <td>{{ $item->ended_at }}</td>
+                <td>{{ implode(PHP_EOL, $item->data) }}</td>
             </tr>
         @endforeach
     @else
