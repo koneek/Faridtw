@@ -35,7 +35,14 @@ class EmulatorController extends Controller
         $handle = fopen("storage/" . $filePath, "r");
         if ($handle) {
             while (($line = fgets($handle)) !== false) {
-                $device_data[] = $method==='data' ? preg_split('/\s+/', $line) : $line;
+                if ($method==='data') {
+                    if (str_contains($line, 'Integrals')) {
+                        break;
+                    }
+                    $device_data[] = preg_split('/\s+/', $line);
+                } else {
+                    $device_data[] =  $line;
+                }
             }
             fclose($handle);
         }
@@ -67,16 +74,7 @@ class EmulatorController extends Controller
         $response = curl_exec($curl);
 
         curl_close($curl);
-//        echo $response;
-//
-//        dd($method, $data);
-//
-//        dd(123);
-//        dd($x);
-//        dd($request->all());
 
         return $response;
-
-        return view("Emulator.index");
     }
 }

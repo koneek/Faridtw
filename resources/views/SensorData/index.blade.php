@@ -25,7 +25,7 @@
     <div class="col-lg-12">
         <div class="ibox">
             <div class="ibox-title">
-                <h2>Sensor Data</h2>
+                <h2>Данны датчиков</h2>
                 <div class="ibox-tools">
                     <a class="collapse-link">
                         <i class="fa fa-chevron-up"></i>
@@ -42,25 +42,20 @@
                 </div>
             </div>
             <div class="ibox-content" style="">
-                <h3>Filter</h3>
+                <h3>Фильтр</h3>
 
                 <form action="{{ route('sensor-data.index') }}">
-                    <label for="guid">GUID:</label><br>
-                    <input type="text" id="guid" name="guid"><br><br>
+                    <label for="guid">Device id:</label><br>
+                    <input type="text" id="device_id" name="device_id"><br><br>
 
-                    <label for="sensor_id">Sensor ID:</label><br>
-                    <input type="text" id="sensor_id" name="sensor_id"><br><br>
+                    <label for="sensor_id">Cycle ID:</label><br>
+                    <input type="text" id="cycle_id" name="cycle_id"><br><br>
 
-                    <label for="sensor_d_time">Sensor D Time:</label><br>
-                    <input type="text" id="sensor_d_time" name="sensor_d_time"><br><br>
+                    <label for="sensor_id">Row ID:</label><br>
+                    <input type="text" id="row_id" name="row_id"><br><br>
 
-                    <label for="user_id">User ID:</label><br>
-                    <input type="text" id="user_id" name="user_id"><br><br>
-
-                    <select class="form-control m-b" name="type">
-                        <option value="log">Log</option>
-                        <option value="sensor">Sensor</option>
-                    </select><br><br>
+                    <label for="sensor_d_time">Date Time:</label><br>
+                    <input type="text" id="date_time" name="date_time"><br><br>
 
                     <input type="submit" value="Submit">
                 </form>
@@ -73,8 +68,8 @@
                         <th>Cycle ID</th>
                         <th>Row ID</th>
                         <th>Date Time</th>
-                        <th>Deleted</th>
-                        <th>Actions</th>
+                        <th>Удалено</th>
+                        <th>Действия</th>
                     </tr>
                     @foreach($sensorData as $item)
                         <tr>
@@ -84,12 +79,12 @@
                             <td>{{ $item->date_time }}</td>
                             <td>
                                 @if (is_null($item->deleted_at))
-                                    No
+                                    Нет
                                 @else
-                                    Yes
+                                    Да
                                 @endif
                             </td>
-                            <td><a target="_blank" href="/sensor-data/{{$item->id}}">{{ "sensor data" }}</a>
+                            <td><a target="_blank" href="/sensor-data/{{$item->id}}">{{ "данные" }}</a>
                             </td>
                         </tr>
                     @endforeach

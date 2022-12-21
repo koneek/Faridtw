@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cycle;
+use App\Models\Device;
 use App\Models\DeviceData;
 use App\Models\SensorData;
 use App\Models\Stage;
@@ -11,6 +12,7 @@ use Faker\Generator;
 use Illuminate\Container\Container;
 use Illuminate\Http\Request;
 use Faker\Factory;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use NunoMaduro\Collision\Adapters\Phpunit\State;
@@ -54,14 +56,14 @@ class DeviceController extends Controller
      *     ),
      * )
      */
-    public function power(Request $request): array
+    public function power(Request $request): array|Response
     {
         $validator = Validator::make($request->all(), [
-            'GUID' => 'required|string',
+            'GUID' => 'required|string|max:36|unique:App\Models\DeviceData,guid',
             'DeviceID' => 'required|int',
-            'DeviceDTime' => 'required|string',
-            'UserID' => 'int',
-            'power' => ['required', Rule::in(["on", "off"])]
+            'DeviceDTime' => 'required|date_format:Y-m-d H:i:s|before_or_equal:' . date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . "+ 1 days")),
+//            'UserID' => 'int',
+            'power' => Rule::in(["on", "off"])
         ]);
 
         if ($validator->fails()) {
@@ -70,6 +72,10 @@ class DeviceController extends Controller
             ];
         }
 
+        $device = Device::find($request->get('DeviceID'));
+        if (!$device) {
+            return response(['error' => true, 'error-msg' => 'Oborudovanie ne identificirovano'], 404);
+        }
         DeviceData::create([
             'guid' => $request->get('GUID'),
             'device_id' => $request->get('DeviceID'),
@@ -115,10 +121,10 @@ class DeviceController extends Controller
     public function mode(Request $request): array
     {
         $validator = Validator::make($request->all(), [
-            'GUID' => 'required|string',
+            'GUID' => 'required|string|max:36|unique:App\Models\DeviceData,guid',
             'DeviceID' => 'required|int',
-            'DeviceDTime' => 'required|string',
-            'UserID' => 'int',
+            'DeviceDTime' => 'required|date_format:Y-m-d H:i:s|before_or_equal:' . date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . "+ 1 days")),
+//            'UserID' => 'int',
             'DeviceData' => 'required|array',
         ]);
 
@@ -162,13 +168,13 @@ class DeviceController extends Controller
      *     ),
      * )
      */
-    public function data(Request $request): array
+    public function data(Request $request): array|Response
     {
         $validator = Validator::make($request->all(), [
-            'GUID' => 'required|string',
+            'GUID' => 'required|string|max:36|unique:App\Models\DeviceData,guid',
             'DeviceID' => 'required|int', // у нас в базе
-            'DeviceDTime' => 'required|string', // от клиента
-            'UserID' => 'int', //пока null
+            'DeviceDTime' => 'required|date_format:Y-m-d H:i:s|before_or_equal:' . date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . "+ 1 days")),
+//            'UserID' => 'int', //пока null
             'DeviceData' => 'required|array',
         ]);
 
@@ -176,6 +182,11 @@ class DeviceController extends Controller
             return [
                 'validator' => $validator->messages()
             ];
+        }
+
+        $device = Device::find($request->get('DeviceID'));
+        if (!$device) {
+            return response(['error' => true, 'error-msg' => 'Oborudovanie ne identificirovano'], 404);
         }
 
         DeviceData::create([
@@ -312,13 +323,13 @@ class DeviceController extends Controller
      *     ),
      * )
      */
-    public function status(Request $request): array
+    public function status(Request $request): array|Response
     {
         $validator = Validator::make($request->all(), [
-            'GUID' => 'required|string',
+            'GUID' => 'required|string|max:36|unique:App\Models\DeviceData,guid',
             'DeviceID' => 'required|int',
-            'DeviceDTime' => 'required|string',
-            'UserID' => 'int',
+            'DeviceDTime' => 'required|date_format:Y-m-d H:i:s|before_or_equal:' . date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . "+ 1 days")),
+//            'UserID' => 'int',
             'DeviceData' => 'required|array',
         ]);
 
@@ -326,6 +337,11 @@ class DeviceController extends Controller
             return [
                 'validator' => $validator->messages()
             ];
+        }
+
+        $device = Device::find($request->get('DeviceID'));
+        if (!$device) {
+            return response(['error' => true, 'error-msg' => 'Oborudovanie ne identificirovano'], 404);
         }
 
         DeviceData::create([

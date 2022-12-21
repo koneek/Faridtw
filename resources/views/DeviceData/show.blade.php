@@ -21,7 +21,7 @@
 </head>
 <body>
 
-<h2>Device Data</h2>
+<h2>Данные о режимах работы</h2>
 
 <table>
     <thead>
@@ -47,7 +47,7 @@
             <hr>
         </td>
         <td>
-            <p>Data Type</p>
+            <p>Тип</p>
             <h3>{{ $deviceData->type }}</h3>
             <hr>
         </td>

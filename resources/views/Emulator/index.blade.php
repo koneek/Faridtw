@@ -45,10 +45,10 @@
             <div class="ibox-content" style="">
                 <form id="emulate_form" action="{{ route('emulate') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    <div class="form-group row"><label class="col-sm-2 col-form-label">Method</label>
+                    <div class="form-group row"><label class="col-sm-2 col-form-label">Команда</label>
                         <div class="col-sm-10">
                             <select class="form-control m-b" id="method" name="method" onchange="methodChanged()">
-                                <option selected disabled hidden>Select method</option>
+                                <option selected disabled hidden>Выберите команду</option>
                                 <option value="data">Data</option>
                                 <option value="status">Status</option>
                                 <option value="power">Power</option>
@@ -58,9 +58,9 @@
                     <div class="form-group  row"><label class="col-sm-2 col-form-label">GUID</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="guid" name="guid" readonly>
+                            <button id="generate_guid" onclick="event.preventDefault(); generateguid()">Сгенерировать GUID</button>
                         </div>
                     </div>
-                    <button id="generate_guid" onclick="event.preventDefault(); generateguid()">Generate UUID</button>
                     <div class="form-group  row"><label class="col-sm-2 col-form-label">DeviceID</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" name="device_id">
@@ -68,10 +68,11 @@
                     </div>
                     <div class="form-group  row"><label class="col-sm-2 col-form-label">DeviceDTime</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" name="device_d_time">
+                            <input type="text" class="form-control" name="device_d_time" value="2022-12-20 18:37:29">
                         </div>
                     </div>
 
+                    <br>
                     <div class="row">
                         <div class="col-md-6">
                             <input type="file" id="file" name="file" class="form-control" accept=".txt,.log"/>
@@ -81,13 +82,18 @@
                     </div>
 
                     <br>
-                    <br>
-                    <br>
                     <div class="form-group row">
                         <div class="col-sm-4 col-sm-offset-2">
-                            <button class="btn btn-white btn-sm" type="submit">Cancel</button>
-                            <button type="submit" class="btn btn-success">Send Data</button>
+                            <button type="submit" class="btn btn-success">Отправить</button>
                         </div>
+                    </div>
+
+
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Ответ от сервера:</h5>
+                        </div>
+                        <div id="response_message" class="ibox-content"></div>
                     </div>
                 </form>
             </div>
@@ -122,8 +128,6 @@
 
     $("#emulate_form").submit(function(e) {
         e.preventDefault();
-        console.log('start ajax')
-        console.log($("#emulate_form").serialize())
         $.ajax({
             type: 'POST',
             url: $("#emulate_form").attr("action"),
@@ -137,8 +141,7 @@
             // data: $("#emulate_form").serialize(),
             //or your custom data either as object {foo: "bar", ...} or foo=bar&...
             success: function (response) {
-                console.log(response)
-                alert('Данные успешно сохранены')
+                $("#response_message").text(response)
             },
         });
     });

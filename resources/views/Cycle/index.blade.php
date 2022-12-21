@@ -25,7 +25,7 @@
     <div class="col-lg-12">
         <div class="ibox">
             <div class="ibox-title">
-                <h2>Device Data</h2>
+                <h2>Циклы</h2>
                 <div class="ibox-tools">
                     <a class="collapse-link">
                         <i class="fa fa-chevron-up"></i>
@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div class="ibox-content" style="">
-                <h3>Filter</h3>
+                <h3>Фильтр</h3>
 
                 <form action="{{ route('cycles.index') }}">
                     <label for="guid">GUID:</label><br>
@@ -65,17 +65,17 @@
                     <input type="submit" value="Submit">
                 </form>
 
-                <h3>List</h3>
+                <h3>Список</h3>
 
                 <table>
                     <tr>
-                        <th>Number</th>
-                        <th>Started at</th>
-                        <th>Ended at</th>
-                        <th>Duration</th>
-                        <th>Status</th>
-                        <th>Deleted</th>
-                        <th>Actions</th>
+                        <th>Номер</th>
+                        <th>Начало</th>
+                        <th>Завершение</th>
+                        <th>Продолжительность</th>
+                        <th>Статус</th>
+                        <th>Удалено</th>
+                        <th>Действия</th>
                     </tr>
                     @foreach($cycles as $item)
                         <tr>
@@ -86,12 +86,12 @@
                             <td>{{ $item->status }}</td>
                             <td>
                                 @if (is_null($item->deleted_at))
-                                    No
+                                    Нет
                                 @else
-                                    Yes
+                                    Да
                                 @endif
                             </td>
-                            <td><a target="_blank" href="/cycles/{{$item->id}}">stages</a>
+                            <td><a target="_blank" href="/cycles/{{$item->id}}">стадии</a>
                             </td>
                         </tr>
                     @endforeach

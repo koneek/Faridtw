@@ -25,7 +25,7 @@
     <div class="col-lg-12">
         <div class="ibox">
             <div class="ibox-title">
-                <h2>Device Data</h2>
+                <h2>Данные о режимах работы</h2>
                 <div class="ibox-tools">
                     <a class="collapse-link">
                         <i class="fa fa-chevron-up"></i>
@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div class="ibox-content" style="">
-                <h3>Filter</h3>
+                <h3>Фильтр</h3>
 
                 <form action="{{ route('device-data.index') }}">
                     <label for="guid">GUID:</label><br>
@@ -57,17 +57,13 @@
                     <label for="user_id">User ID:</label><br>
                     <input type="text" id="user_id" name="user_id"><br><br>
 
-                    {{--    <input type="radio" id="log" name="type" value="log">--}}
-                    {{--    <label for="log">Log</label><br><br>--}}
-                    {{--    <input type="radio" id="sensor" name="type" value="sensor">--}}
-                    {{--    <label for="sensor">Sensor</label><br><br>--}}
-
+                    <label for="user_id">Тип:</label><br>
                     <select class="form-control m-b" name="type">
                         <option value="log">Log</option>
                         <option value="sensor">Sensor</option>
                     </select><br><br>
 
-                    <input type="submit" value="Submit">
+                    <input type="submit" value="Применить">
                 </form>
 
                 <h3>List</h3>
@@ -78,9 +74,9 @@
                         <th>Device ID</th>
                         <th>Device D Time</th>
                         <th>User ID</th>
-                        <th>Data Type</th>
-                        <th>Deleted</th>
-                        <th>Actions</th>
+                        <th>Тип</th>
+                        <th>Удалено</th>
+                        <th>Действия</th>
                     </tr>
                     @foreach($deviceData as $item)
                         <tr>
@@ -91,12 +87,12 @@
                             <td>{{ $item->type }}</td>
                             <td>
                                 @if (is_null($item->deleted_at))
-                                    No
+                                    Нет
                                 @else
-                                    Yes
+                                    Да
                                 @endif
                             </td>
-                            <td><a target="_blank" href="/device-data/{{$item->id}}">{{ "device data" }}</a>
+                            <td><a target="_blank" href="/device-data/{{$item->id}}">{{ "данные" }}</a>
                             </td>
                         </tr>
                     @endforeach

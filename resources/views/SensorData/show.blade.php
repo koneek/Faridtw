@@ -21,7 +21,7 @@
 </head>
 <body>
 
-<h2>Sensor Data</h2>
+<h2>Данные датчиков</h2>
 
 <table>
     <thead>
@@ -48,7 +48,7 @@
         </td>
     </tr>
     <tr>
-        <th colspan="2">Sensor Data</th>
+        <th colspan="2">Данные датчиков</th>
     </tr>
     </thead>
     <tbody>
@@ -61,7 +61,7 @@
         @endforeach
     @else
         <tr>
-            <td>NO SENSOR DATA</td>
+            <td>Нет данных</td>
         </tr>
     @endif
     </tbody>
