@@ -142,6 +142,7 @@
             // data: $("#emulate_form").serialize(),
             //or your custom data either as object {foo: "bar", ...} or foo=bar&...
             success: function (response) {
+                console.log(response)
                 $("#response_message").text(response)
             },
             error: function(error){
