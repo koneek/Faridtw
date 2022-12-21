@@ -18,6 +18,7 @@
             background-color: #dddddd;
         }
     </style>
+    <link rel="stylesheet" href="css/app.css">
     <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 </head>
 <body>
@@ -143,9 +144,11 @@
             success: function (response) {
                 $("#response_message").text(response)
             },
+            error: function(error){
+                console.log(error)
+            }
         });
     });
 </script>
 </body>
 </html>
-
