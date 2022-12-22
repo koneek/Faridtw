@@ -1,12 +1,18 @@
 <li>
-    <a href="/cycles" class="dropdown-item">Циклы</a>
+    <a href="/emulator"><i class="fa fa-laptop"></i> <span class="nav-label">Эмулятор</span></a>
 </li>
 <li>
-    <a href="/device-data" class="dropdown-item">Данные о режимах работы</a>
+    <a href="/device-data"><i class="fa fa-table"></i> <span class="nav-label">Запросы</span></a>
 </li>
 <li>
-    <a href="/emulator" class="dropdown-item">Эмулятор</a>
+    <a href="/cycles"><i class="fa fa-sitemap"></i> <span class="nav-label">Данные циклов</span></a>
 </li>
 <li>
-    <a href="/sensor-data" class="dropdown-item">Данные датчиков</a>
+    <a href="/sensor-data"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">Данные датчиков</span></a>
+</li>
+<li>
+    <a href="https://ru.wikipedia.org/wiki/Документация"><i class="fa fa-files-o"></i> <span class="nav-label">Документация</span></a>
+</li>
+<li>
+    <a href="https://swagger.io/"><i class="fa fa-flask"></i> <span class="nav-label">Swagger (YAML)</span></a>
 </li>

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>INSPINIA | Dashboard</title>
+    <title>Эмулятор запросов в сервис мониторинга</title>
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
@@ -32,18 +32,7 @@
                             IN+
                         </div>
                     </li>
-                    <li>
-                        <a href="/cycles"><i class="fa fa-sitemap"></i> <span class="nav-label">Циклы</span></a>
-                    </li>
-                    <li>
-                        <a href="/device-data"><i class="fa fa-table"></i> <span class="nav-label">Данные о режимах работы</span></a>
-                    </li>
-                    <li>
-                        <a href="/emulator"><i class="fa fa-laptop"></i> <span class="nav-label">Эмулятор</span></a>
-                    </li>
-                    <li>
-                        <a href="/sensor-data"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">Данные датчиков</span></a>
-                    </li>
+                    @include('menu')
                 </ul>
 
             </div>
@@ -55,7 +44,7 @@
                     <div class="col-lg-12">
                         <div class="ibox">
                             <div class="ibox-title">
-                                <h2>Эмулятор запросов сервиса мониторинга</h2>
+                                <h2>Эмулятор запросов в сервис мониторинга</h2>
                                 <div class="ibox-tools">
                                     <a class="collapse-link">
                                         <i class="fa fa-chevron-up"></i>
@@ -64,7 +53,6 @@
                                         <i class="fa fa-wrench"></i>
                                     </a>
                                     <ul class="dropdown-menu dropdown-user">
-                                        @include('menu')
                                     </ul>
                                     <a class="close-link">
                                         <i class="fa fa-times"></i>
@@ -77,22 +65,29 @@
                                     <div class="form-group row"><label class="col-sm-2 col-form-label">Команда</label>
                                         <div class="col-sm-10">
                                             <select class="form-control m-b" id="method" name="method" onchange="methodChanged()">
-                                                <option selected disabled hidden>Выберите команду</option>
-                                                <option value="data">Data</option>
-                                                <option value="status">Status</option>
-                                                <option value="power">Power</option>
+                                                <option selected disabled hidden>Выбрать команду</option>
+                                                <option value="data">Data - данные от датчиков</option>
+                                                <option value="status">Status -  данные о циклах</option>
+                                                <option value="power">Power - данные о питании</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="form-group  row"><label class="col-sm-2 col-form-label">GUID</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" class="form-control" id="guid" name="guid" readonly>
-                                            <button id="generate_guid" onclick="event.preventDefault(); generateguid()">Сгенерировать GUID</button>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="guid" name="guid">
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <button class="btn btn-outline-warning btn-block" id="generate_guid" onclick="event.preventDefault(); generateguid()">Сгенерировать GUID</button>
                                         </div>
                                     </div>
                                     <div class="form-group  row"><label class="col-sm-2 col-form-label">DeviceID</label>
                                         <div class="col-sm-10">
-                                            <input type="text" class="form-control" name="device_id">
+                                            <select class="form-control m-b" id="device_id" name="device_id">
+                                                <option selected disabled hidden>Выбрать аппарат</option>
+                                                @foreach($devices as $device)
+                                                    <option value="{{ $device->id }}">{{ $device->id }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="form-group  row"><label class="col-sm-2 col-form-label">DeviceDTime</label>
@@ -104,9 +99,13 @@
                                     <br>
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <input type="file" id="file" name="file" class="form-control" accept=".txt,.log"/>
+                                            <label class="btn btn-primary">
+                                                <i class="fa fa-image"></i> Выбрать файл<input type="file" id="file" name="file" class="form-control" style="display: none;" accept=".txt,.log"/>
+                                            </label>
+                                            <div id="selected_file"></div>
                                         </div>
                                         <div class="col-md-6">
+
                                         </div>
                                     </div>
 
@@ -121,6 +120,7 @@
                                         <div class="ibox-title">
                                             <h5>Ответ от сервера:</h5>
                                         </div>
+                                        <div id="response_code" class="ibox-content"></div>
                                         <div id="response_message" class="ibox-content"></div>
                                     </div>
                                 </form>
@@ -172,15 +172,20 @@
             contentType: false,
             // data: $("#emulate_form").serialize(),
             //or your custom data either as object {foo: "bar", ...} or foo=bar&...
-            success: function (response) {
-                console.log(response)
-                $("#response_message").text(response)
+            success: function (data, textStatus, xhr) {
+                $("#response_code").text('Код: '+xhr.status)
+                $("#response_message").text('Сообщение: '+data)
             },
-            error: function(error){
-                console.log(error)
+            error: function(error, textStatus, xhr){
+                $("#response_code").text('Код: '+error.status)
+                $("#response_message").text('Сообщение: '+xhr)
             }
         });
     });
+
+    document.getElementById("file").onchange = function () {
+        $("#selected_file").text(this.value.replace(/^.*[\\\/]/, ''))
+    };
 </script>
 </body>
 </html>

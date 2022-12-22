@@ -1,107 +1,168 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
-        table {
-            font-family: arial, sans-serif;
-            border-collapse: collapse;
-            width: 100%;
-        }
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-        td, th {
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
-        }
+    <title>Запросы</title>
 
-        tr:nth-child(even) {
-            background-color: #dddddd;
-        }
-    </style>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Toastr style -->
+    <link href="css/plugins/toastr/toastr.min.css" rel="stylesheet">
+
+    <!-- Gritter -->
+    <link href="js/plugins/gritter/jquery.gritter.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/app.css">
+
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 </head>
 <body>
-
 <div class="row">
-    <div class="col-lg-12">
-        <div class="ibox">
-            <div class="ibox-title">
-                <h2>Данные о режимах работы</h2>
-                <div class="ibox-tools">
-                    <a class="collapse-link">
-                        <i class="fa fa-chevron-up"></i>
-                    </a>
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-wrench"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-user">
-                        @include('menu')
-                    </ul>
-                    <a class="close-link">
-                        <i class="fa fa-times"></i>
-                    </a>
-                </div>
+    <div id="wrapper">
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav metismenu" id="side-menu">
+                    <li class="nav-header">
+                        <div class="logo-element">
+                            IN+
+                        </div>
+                    </li>
+                    @include('menu')
+                </ul>
+
             </div>
-            <div class="ibox-content" style="">
-                <h3>Фильтр</h3>
+        </nav>
 
-                <form action="{{ route('device-data.index') }}">
-                    <label for="guid">GUID:</label><br>
-                    <input type="text" id="guid" name="guid"><br><br>
+        <div id="page-wrapper" class="gray-bg dashbard-1">
+            <div class="wrapper wrapper-content">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="ibox">
+                            <div class="ibox-title">
+                                <h2>Запросы</h2>
+                                <div class="ibox-tools">
+                                    <a class="collapse-link">
+                                        <i class="fa fa-chevron-up"></i>
+                                    </a>
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                        <i class="fa fa-wrench"></i>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-user">
+                                    </ul>
+                                    <a class="close-link">
+                                        <i class="fa fa-times"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="ibox-content" style="">
+                                <form id="emulate_form" action="{{ route('device-data.index') }}" method="GET"
+                                      enctype="multipart/form-data">
+                                    @csrf
+                                    <div class="form-group  row"><label class="col-sm-2 col-form-label">GUID</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="guid" name="guid">
+                                        </div>
+                                    </div>
+                                    <div class="form-group  row"><label class="col-sm-2 col-form-label">Device
+                                            ID</label>
+                                        <div class="col-sm-10">
+                                            <select class="form-control m-b" id="device_id" name="device_id">
+                                                <option selected disabled hidden>Выбрать аппарат</option>
+                                                @foreach($devices as $device)
+                                                    <option value="{{ $device->id }}">{{ $device->id }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group  row"><label class="col-sm-2 col-form-label">Device D
+                                            Time</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="device_d_time">
+                                        </div>
+                                    </div>
+                                    <div class="form-group  row"><label class="col-sm-2 col-form-label">User ID</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="user_id">
+                                        </div>
+                                    </div>
+                                    <div class="form-group  row"><label class="col-sm-2 col-form-label">Тип</label>
+                                        <div class="col-sm-10">
+                                            <select class="form-control m-b" id="type" name="type">
+                                                <option selected disabled hidden>Выбрать тип</option>
+                                                <option value="log">Log</option>
+                                                <option value="sensor">Sensor</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-4 col-sm-offset-2">
+                                            <button type="submit" class="btn btn-success">Применить</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="ibox ">
+                            <div class="ibox-title">
+                                <h5></h5>
+                            </div>
+                            <div class="ibox-content">
+                                <div class="table-responsive">
+                                    <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                                        <table
+                                            class="table table-striped table-bordered table-hover dataTables-example dataTable"
+                                            id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info"
+                                            role="grid">
+                                            <thead>
+                                            <tr role="row">
+                                                <th class="sorting" style="width: 159.187px;">GUID</th>
+                                                <th class="sorting" style="width: 159.187px;">Device ID</th>
+                                                <th class="sorting" style="width: 159.187px;">Device D Time</th>
+                                                <th class="sorting" style="width: 159.187px;">User ID</th>
+                                                <th class="sorting" style="width: 159.187px;">Тип</th>
+                                                <th class="sorting" style="width: 159.187px;">Удалено</th>
+                                                <th class="sorting" style="width: 159.187px;">Действия</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            @foreach($deviceData as $item)
+                                                <tr>
+                                                    <td>{{ $item->guid }}</td>
+                                                    <td>{{ $item->device_id }}</td>
+                                                    <td>{{ $item->device_d_time }}</td>
+                                                    <td>{{ $item->user_id }}</td>
+                                                    <td>{{ $item->type }}</td>
+                                                    <td>
+                                                        @if (is_null($item->deleted_at))
+                                                            Нет
+                                                        @else
+                                                            Да
+                                                        @endif
+                                                    </td>
+                                                    <td><a target="_blank" href="/device-data/{{$item->id}}">{{ "данные" }}</a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
 
-                    <label for="device_id">Device ID:</label><br>
-                    <input type="text" id="device_id" name="device_id"><br><br>
-
-                    <label for="device_d_time">Device D Time:</label><br>
-                    <input type="text" id="device_d_time" name="device_d_time"><br><br>
-
-                    <label for="user_id">User ID:</label><br>
-                    <input type="text" id="user_id" name="user_id"><br><br>
-
-                    <label for="user_id">Тип:</label><br>
-                    <select class="form-control m-b" name="type">
-                        <option value="log">Log</option>
-                        <option value="sensor">Sensor</option>
-                    </select><br><br>
-
-                    <input type="submit" value="Применить">
-                </form>
-
-                <h3>List</h3>
-
-                <table>
-                    <tr>
-                        <th>GUID</th>
-                        <th>Device ID</th>
-                        <th>Device D Time</th>
-                        <th>User ID</th>
-                        <th>Тип</th>
-                        <th>Удалено</th>
-                        <th>Действия</th>
-                    </tr>
-                    @foreach($deviceData as $item)
-                        <tr>
-                            <td>{{ $item->guid }}</td>
-                            <td>{{ $item->device_id }}</td>
-                            <td>{{ $item->device_d_time }}</td>
-                            <td>{{ $item->user_id }}</td>
-                            <td>{{ $item->type }}</td>
-                            <td>
-                                @if (is_null($item->deleted_at))
-                                    Нет
-                                @else
-                                    Да
-                                @endif
-                            </td>
-                            <td><a target="_blank" href="/device-data/{{$item->id}}">{{ "данные" }}</a>
-                            </td>
-                        </tr>
-                    @endforeach
-                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
 </body>
 </html>
-

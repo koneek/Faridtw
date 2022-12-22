@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Device;
 use App\Models\DeviceData;
 use App\Http\Requests\StoreDeviceDataRequest;
 use App\Http\Requests\UpdateDeviceDataRequest;
@@ -37,7 +38,7 @@ class DeviceDataController extends Controller
             $query->where('type', $request->get('type'));
         }
 
-        return view("DeviceData.index", ["deviceData" => $query->get()]);
+        return view("DeviceData.index", ["deviceData" => $query->get(), "devices" => Device::all()]);
     }
 
     /**

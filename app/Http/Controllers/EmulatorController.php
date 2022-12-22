@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Device;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View;
@@ -16,7 +17,7 @@ class EmulatorController extends Controller
      */
     public function index()
     {
-        return view("Emulator.index");
+        return view("Emulator.index", ["devices" => Device::all()]);
     }
 
     public function emulate(Request $request)
