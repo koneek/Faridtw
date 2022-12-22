@@ -60,7 +60,7 @@
     @if (!is_null($deviceData->device_data))
         @foreach($deviceData->device_data as $item)
             <tr>
-                <td>{{ $item }}</td>
+                <td>{{ is_array($item) ? json_encode($item) : $item }}</td>
             </tr>
         @endforeach
     @else
