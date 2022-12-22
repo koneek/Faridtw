@@ -75,10 +75,7 @@ class DeviceController extends Controller
         );
 
         if ($validator->fails()) {
-            return [
-                'status' => 400,
-                'messages' => $validator->messages()
-            ];
+            return ['status' => 400, 'messages' => $validator->messages()];
         }
 
         $device = Device::find($request->get('DeviceID'));
@@ -203,9 +200,7 @@ class DeviceController extends Controller
         );
 
         if ($validator->fails()) {
-            return [
-                'validator' => $validator->messages()
-            ];
+            return ['status' => 400, 'messages' => $validator->messages()];
         }
 
         $device = Device::find($request->get('DeviceID'));
@@ -373,10 +368,7 @@ class DeviceController extends Controller
         );
 
         if ($validator->fails()) {
-            return [
-                'status' => 400,
-                'messages' => $validator->messages()
-            ];
+            return ['status' => 400, 'messages' => $validator->messages()];
         }
 
         $device = Device::find($request->get('DeviceID'));
