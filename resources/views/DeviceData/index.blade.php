@@ -129,7 +129,7 @@
                                                 <th class="sorting" style="width: 159.187px;">User ID</th>
                                                 <th class="sorting" style="width: 159.187px;">Тип</th>
                                                 <th class="sorting" style="width: 159.187px;">Дата и время запроса</th>
-                                                <th class="sorting" style="width: 159.187px;">IP</th>
+{{--                                                <th class="sorting" style="width: 159.187px;">IP</th>--}}
                                                 <th class="sorting" style="width: 159.187px;">Удалено</th>
                                             </tr>
                                             </thead>
@@ -142,7 +142,7 @@
                                                     <td>{{ $item->user_id }}</td>
                                                     <td>{{ $item->type }}</td>
                                                     <td>{{ $item->request_time }}</td>
-                                                    <td>{{ $item->ip }}</td>
+{{--                                                    <td>{{ $item->ip }}</td>--}}
                                                     <td>
                                                         @if (is_null($item->deleted_at))
                                                             Нет

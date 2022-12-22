@@ -109,7 +109,7 @@
                                     <div class="row" id="power_mode" style="display: none;">
                                         <div class="col-md-2">
                                             <select class="form-control m-b" id="power" name="power">
-                                                <option selected disabled hidden>Выбрать команду</option>
+                                                <option selected disabled hidden>Значение питания</option>
                                                 <option value="off">Off</option>
                                                 <option value="on">On</option>
                                             </select>
@@ -182,8 +182,8 @@
             // data: $("#emulate_form").serialize(),
             //or your custom data either as object {foo: "bar", ...} or foo=bar&...
             success: function (data, textStatus, xhr) {
-                $("#response_code").text('Код: '+xhr.status)
-                $("#response_message").text('Сообщение: '+data)
+                $("#response_code").text('Код: '+JSON.parse(data).status)
+                $("#response_message").text('Сообщение: '+ JSON.stringify(JSON.parse(data).messages))
             },
             error: function(error, textStatus, xhr){
                 $("#response_code").text('Код: '+error.status)

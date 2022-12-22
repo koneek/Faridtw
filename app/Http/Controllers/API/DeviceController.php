@@ -58,23 +58,32 @@ class DeviceController extends Controller
      */
     public function power(Request $request): array|Response
     {
-        $validator = Validator::make($request->all(), [
-            'GUID' => 'required|string|max:36|unique:App\Models\DeviceData,guid',
-            'DeviceID' => 'required|int',
-            'DeviceDTime' => 'required|date_format:Y-m-d H:i:s|before_or_equal:' . date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . "+ 1 days")),
-//            'UserID' => 'int',
-            'power' => Rule::in(["on", "off"])
-        ]);
+        $validator = Validator::make($request->all(),
+            [
+                'GUID' => 'required|string|max:36|unique:App\Models\DeviceData,guid',
+                'DeviceID' => 'required|int',
+                'DeviceDTime' => 'required|date_format:Y-m-d H:i:s|before_or_equal:' . date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . "+ 12 hours")),
+                'UserID' => 'int',
+                'power' => ['required', Rule::in(["on", "off"])]
+            ],
+            [
+                'GUID.required' => 'GUID отсутствует, необходимо указать идентификатор запроса',
+                'DeviceID.required' => 'DeviceID отсутствует, необходимо указать идентификатор устройства',
+                'DeviceDTime.required' => 'DeviceDTime отсутствует, необходимо указать актуальное время на устройстве',
+                'power.required' => 'Статус питания  отсутствует, необходимо заполнить поле DevicePower значением On или Off',
+            ]
+        );
 
         if ($validator->fails()) {
             return [
-                'validator' => $validator->messages()
+                'status' => 400,
+                'messages' => $validator->messages()
             ];
         }
 
         $device = Device::find($request->get('DeviceID'));
         if (!$device) {
-            return response(['error' => true, 'error-msg' => 'Oborudovanie ne identiqqqqqqqqqqficirovano'], 404);
+            return ['status' => 400, 'messages' => "Оборудование не идентифицировано"];
         }
         DeviceData::create([
             'guid' => $request->get('GUID'),
@@ -86,12 +95,17 @@ class DeviceController extends Controller
             'device_data' => ["power: " . $request->get('power')],
         ]);
 
+//        return [
+//            "GUID" => $this->faker->uuid,
+//            "DeviceID" => $this->faker->numberBetween(1, 100),
+//            'DeviceDTime' => $this->faker->date("Y-m-d\TH:i:sP"),
+//            "UserID" => $this->faker->numberBetween(1, 100),
+//            "power" => $this->faker->randomElement(["on", "off"])
+//        ];
+
         return [
-            "GUID" => $this->faker->uuid,
-            "DeviceID" => $this->faker->numberBetween(1, 100),
-            'DeviceDTime' => $this->faker->date("Y-m-d\TH:i:sP"),
-            "UserID" => $this->faker->numberBetween(1, 100),
-            "power" => $this->faker->randomElement(["on", "off"])
+            'status' => 200,
+            'messages' => "Запрос успешно выполнен"
         ];
     }
 
@@ -172,13 +186,21 @@ class DeviceController extends Controller
      */
     public function data(Request $request): array|Response
     {
-        $validator = Validator::make($request->all(), [
-            'GUID' => 'required|string|max:36|unique:App\Models\DeviceData,guid',
-            'DeviceID' => 'required|int', // у нас в базе
-            'DeviceDTime' => 'required|date_format:Y-m-d H:i:s|before_or_equal:' . date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . "+ 1 days")),
-//            'UserID' => 'int', //пока null
-            'DeviceData' => 'required|array',
-        ]);
+        $validator = Validator::make($request->all(),
+            [
+                'GUID' => 'required|string|max:36|unique:App\Models\DeviceData,guid',
+                'DeviceID' => 'required|int',
+                'DeviceDTime' => 'required|date_format:Y-m-d H:i:s|before_or_equal:' . date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . "+ 12 hours")),
+                'UserID' => 'int',
+                'DeviceData' => 'required|array',
+            ],
+            [
+                'GUID.required' => 'GUID отсутствует, необходимо указать идентификатор запроса',
+                'DeviceID.required' => 'DeviceID отсутствует, необходимо указать идентификатор устройства',
+                'DeviceDTime.required' => 'DeviceDTime отсутствует, необходимо указать актуальное время на устройстве',
+                'DeviceData.required' => 'DeviceData  отсутствует, необходимо заполнить массив данных от устройства',
+            ]
+        );
 
         if ($validator->fails()) {
             return [
@@ -188,7 +210,7 @@ class DeviceController extends Controller
 
         $device = Device::find($request->get('DeviceID'));
         if (!$device) {
-            return response(['error' => true, 'error-msg' => 'Oborudovanie ne identificirovano'], 404);
+            return ['status' => 400, 'messages' => "Оборудование не идентифицировано"];
         }
 
         DeviceData::create([
@@ -213,12 +235,17 @@ class DeviceController extends Controller
             ]);
         }
 
+//        return [
+//            "GUID" => $this->faker->uuid,
+//            "DeviceID" => $this->faker->numberBetween(1, 100),
+//            'DeviceDTime' => $this->faker->date("Y-m-d\TH:i:sP"),
+//            "UserID" => $this->faker->numberBetween(1, 100),
+//            "DeviceData" => $this->faker->shuffleArray(['старт', 'стоп'])
+//        ];
+
         return [
-            "GUID" => $this->faker->uuid,
-            "DeviceID" => $this->faker->numberBetween(1, 100),
-            'DeviceDTime' => $this->faker->date("Y-m-d\TH:i:sP"),
-            "UserID" => $this->faker->numberBetween(1, 100),
-            "DeviceData" => $this->faker->shuffleArray(['старт', 'стоп'])
+            'status' => 200,
+            'messages' => "Запрос успешно выполнен"
         ];
     }
 
@@ -329,23 +356,32 @@ class DeviceController extends Controller
      */
     public function status(Request $request): array|Response
     {
-        $validator = Validator::make($request->all(), [
-            'GUID' => 'required|string|max:36|unique:App\Models\DeviceData,guid',
-            'DeviceID' => 'required|int',
-            'DeviceDTime' => 'required|date_format:Y-m-d H:i:s|before_or_equal:' . date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . "+ 1 days")),
-//            'UserID' => 'int',
-            'DeviceData' => 'required|array',
-        ]);
+        $validator = Validator::make($request->all(),
+            [
+                'GUID' => 'required|string|max:36|unique:App\Models\DeviceData,guid',
+                'DeviceID' => 'required|int',
+                'DeviceDTime' => 'required|date_format:Y-m-d H:i:s|before_or_equal:' . date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . "+ 12 hours")),
+                'UserID' => 'int',
+                'DeviceData' => 'required|array',
+            ],
+            [
+                'GUID.required' => 'GUID отсутствует, необходимо указать идентификатор запроса',
+                'DeviceID.required' => 'DeviceID отсутствует, необходимо указать идентификатор устройства',
+                'DeviceDTime.required' => 'DeviceDTime отсутствует, необходимо указать актуальное время на устройстве',
+                'DeviceData.required' => 'DeviceData  отсутствует, необходимо заполнить массив данных от устройства',
+            ]
+        );
 
         if ($validator->fails()) {
             return [
-                'validator' => $validator->messages()
+                'status' => 400,
+                'messages' => $validator->messages()
             ];
         }
 
         $device = Device::find($request->get('DeviceID'));
         if (!$device) {
-            return response(['error' => true, 'error-msg' => 'Oborudovanie ne identificirovano'], 404);
+            return ['status' => 400, 'messages' => "Оборудование не идентифицировано"];
         }
 
         DeviceData::create([
@@ -367,16 +403,16 @@ class DeviceController extends Controller
         foreach ($request->get('DeviceData') as $key => $row) {
             if (strpos($row, 'Длинный цикл') !== false) {
                 $x = strpos($row, "Длинный цикл");
-                $number = mb_substr($row, $x+13);
+                $number = mb_substr($row, $x + 13);
                 preg_match_all('/\[(.*?)\]/', $row, $matches_ended_at);
                 $cycleStartedAt = date("Y:m:d") . " " . $matches_ended_at[1][0];
             } else if (mb_strpos($row, '--- Стадия') !== false && (mb_strpos($row, 'завершена ---') === false && mb_strpos($row, 'Завершена ---') === false)) {
                 preg_match_all('/--- Стадия (.*?) ---/', $row, $matches_name);
                 preg_match_all('/\[(.*?)\]/', $row, $matches_started_at);
                 $stages[] = [
-                  'number' => count($stages) + 1,
-                  'name' => trim($matches_name[1][0], '"'),
-                  'started_at' => date("Y:m:d") . " " . $matches_started_at[1][0],
+                    'number' => count($stages) + 1,
+                    'name' => trim($matches_name[1][0], '"'),
+                    'started_at' => date("Y:m:d") . " " . $matches_started_at[1][0],
 //                  'started_at' => $row,
                 ];
                 $stageCurrentIndex = count($stages) - 1;
@@ -386,7 +422,7 @@ class DeviceController extends Controller
                 $stageEndedIndex = $key;
 //                $stages[$stageCurrentIndex]['ended_at'] = $row;
                 $stages[$stageCurrentIndex]['ended_at'] = date("Y:m:d") . " " . $matches_ended_at[1][0];
-            } else if ($stageEndedIndex === $key-1) {
+            } else if ($stageEndedIndex === $key - 1) {
                 $stageEndedIndex = -10;
                 $stageState = false;
             } else if (count($stages) > 0 && $stageState) {
@@ -412,12 +448,17 @@ class DeviceController extends Controller
             Stage::create(array_merge($stage, ['cycle_id' => $cycle->id]));
         }
 
+//        return [
+//            "GUID" => $this->faker->uuid,
+//            "DeviceID" => $this->faker->numberBetween(1, 100),
+//            'DeviceDTime' => $this->faker->date("Y-m-d\TH:i:sP"),
+//            "UserID" => $this->faker->numberBetween(1, 100),
+//            "DeviceData" => $this->faker->shuffleArray(['старт', 'стоп'])
+//        ];
+
         return [
-            "GUID" => $this->faker->uuid,
-            "DeviceID" => $this->faker->numberBetween(1, 100),
-            'DeviceDTime' => $this->faker->date("Y-m-d\TH:i:sP"),
-            "UserID" => $this->faker->numberBetween(1, 100),
-            "DeviceData" => $this->faker->shuffleArray(['старт', 'стоп'])
+            'status' => 200,
+            'messages' => "Запрос успешно выполнен"
         ];
     }
 
