@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::create('device_data', function (Blueprint $table) {
             $table->id();
             $table->string('guid');
+            $table->dateTime('request_time')->nullable();
+            $table->string('ip')->nullable();
             $table->integer('device_id');
             $table->string('device_d_time');
             $table->integer('user_id')->nullable();

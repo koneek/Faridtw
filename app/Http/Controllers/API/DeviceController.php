@@ -74,10 +74,12 @@ class DeviceController extends Controller
 
         $device = Device::find($request->get('DeviceID'));
         if (!$device) {
-            return response(['error' => true, 'error-msg' => 'Oborudovanie ne identificirovano'], 404);
+            return response(['error' => true, 'error-msg' => 'Oborudovanie ne identiqqqqqqqqqqficirovano'], 404);
         }
         DeviceData::create([
             'guid' => $request->get('GUID'),
+            'request_time' => date('Y-m-d H:i:s'),
+            'ip' => $request->ip(),
             'device_id' => $request->get('DeviceID'),
             'device_d_time' => $request->get('DeviceDTime'),
             'type' => 'log',
@@ -191,6 +193,8 @@ class DeviceController extends Controller
 
         DeviceData::create([
             'guid' => $request->get('GUID'),
+            'request_time' => date('Y-m-d H:i:s'),
+            'ip' => $request->ip(),
             'device_id' => $request->get('DeviceID'),
             'device_d_time' => $request->get('DeviceDTime'),
             'type' => 'sensor',
@@ -346,6 +350,8 @@ class DeviceController extends Controller
 
         DeviceData::create([
             'guid' => $request->get('GUID'),
+            'request_time' => date('Y-m-d H:i:s'),
+            'ip' => $request->ip(),
             'device_id' => $request->get('DeviceID'),
             'device_d_time' => $request->get('DeviceDTime'),
             'type' => 'log',
@@ -405,15 +411,6 @@ class DeviceController extends Controller
         foreach ($stages as $stage) {
             Stage::create(array_merge($stage, ['cycle_id' => $cycle->id]));
         }
-
-//        dd([
-//            'number' => $number,
-//            'started_at' => $cycleStartedAt,
-//            'ended_at' => $cycleEndedAt,
-//            'duration' => $cycleDuration ?? null,
-//            'status' => 'ended',
-//            'stages' => $stages,
-//        ]);
 
         return [
             "GUID" => $this->faker->uuid,

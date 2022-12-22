@@ -23,37 +23,40 @@ class EmulatorController extends Controller
     public function emulate(Request $request)
     {
         $request->validate([
-            'file' => 'required|mimes:log,txt',
+            'file' => 'mimes:log,txt',
         ]);
-
-        $fileName = $request->file->getClientOriginalName();
-        $filePath = 'uploads/' . $fileName;
-        Storage::disk('public')->put($filePath, file_get_contents($request->file));
 
         $method = $request->get('method');
 
-        $device_data = [];
-        $handle = fopen("storage/" . $filePath, "r");
-        if ($handle) {
-            while (($line = fgets($handle)) !== false) {
-                if ($method==='data') {
-                    if (str_contains($line, 'Integrals')) {
-                        break;
-                    }
-                    $device_data[] = preg_split('/\s+/', $line);
-                } else {
-                    $device_data[] =  $line;
-                }
-            }
-            fclose($handle);
-        }
-
         $data = [];
-
         $data['GUID'] = $request->get('guid');
         $data['DeviceID'] = $request->get('device_id');
         $data['DeviceDTime'] = $request->get('device_d_time');
-        $data['DeviceData'] = $device_data;
+
+        if($request->file && $method!=="power") {
+            $fileName = $request->file->getClientOriginalName();
+            $filePath = 'uploads/' . $fileName;
+            Storage::disk('public')->put($filePath, file_get_contents($request->file));
+
+            $device_data = [];
+            $handle = fopen("storage/" . $filePath, "r");
+            if ($handle) {
+                while (($line = fgets($handle)) !== false) {
+                    if ($method==='data') {
+                        if (str_contains($line, 'Integrals')) {
+                            break;
+                        }
+                        $device_data[] = array_filter(preg_split('/\s+/', $line), fn($value) => !is_null($value) && $value !== '');
+                    } else {
+                        $device_data[] =  $line;
+                    }
+                }
+                fclose($handle);
+            }
+            $data['DeviceData'] = $device_data;
+        } else {
+            $data['power'] = $request->get('power');
+        }
 
         $curl = curl_init();
 

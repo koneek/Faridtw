@@ -16,6 +16,8 @@ class DeviceData extends Model
      */
     protected $fillable = [
         'guid',
+        'request_time',
+        'ip',
         'device_id',
         'device_d_time',
         'user_id',

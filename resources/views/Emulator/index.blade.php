@@ -82,12 +82,13 @@
                                     </div>
                                     <div class="form-group  row"><label class="col-sm-2 col-form-label">DeviceID</label>
                                         <div class="col-sm-10">
-                                            <select class="form-control m-b" id="device_id" name="device_id">
-                                                <option selected disabled hidden>Выбрать аппарат</option>
-                                                @foreach($devices as $device)
-                                                    <option value="{{ $device->id }}">{{ $device->id }}</option>
-                                                @endforeach
-                                            </select>
+                                            <input type="text" class="form-control" id="device_id" name="device_id">
+{{--                                            <select class="form-control m-b" id="device_id" name="device_id">--}}
+{{--                                                <option selected disabled hidden>Выбрать аппарат</option>--}}
+{{--                                                @foreach($devices as $device)--}}
+{{--                                                    <option value="{{ $device->id }}">{{ $device->id }}</option>--}}
+{{--                                                @endforeach--}}
+{{--                                            </select>--}}
                                         </div>
                                     </div>
                                     <div class="form-group  row"><label class="col-sm-2 col-form-label">DeviceDTime</label>
@@ -97,19 +98,24 @@
                                     </div>
 
                                     <br>
-                                    <div class="row">
+                                    <div class="row" id="file_mode">
                                         <div class="col-md-6">
                                             <label class="btn btn-primary">
                                                 <i class="fa fa-image"></i> Выбрать файл<input type="file" id="file" name="file" class="form-control" style="display: none;" accept=".txt,.log"/>
                                             </label>
                                             <div id="selected_file"></div>
                                         </div>
-                                        <div class="col-md-6">
-
+                                    </div>
+                                    <div class="row" id="power_mode" style="display: none;">
+                                        <div class="col-md-2">
+                                            <select class="form-control m-b" id="power" name="power">
+                                                <option selected disabled hidden>Выбрать команду</option>
+                                                <option value="off">Off</option>
+                                                <option value="on">On</option>
+                                            </select>
                                         </div>
                                     </div>
 
-                                    <br>
                                     <div class="form-group row">
                                         <div class="col-sm-4 col-sm-offset-2">
                                             <button type="submit" class="btn btn-success">Отправить</button>
@@ -156,6 +162,9 @@
         let method = document.getElementById("method").value;
         let fileType = method === "status" ? ".log" : ".txt"
         document.getElementById("file").setAttribute('accept', fileType);
+
+        $("#file_mode").css("display", method === "power" ? "none" : "")
+        $("#power_mode").css("display", method === "power" ? "" : "none")
     }
 
     $("#emulate_form").submit(function(e) {

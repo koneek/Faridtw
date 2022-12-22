@@ -7,16 +7,16 @@
 
     <title>Запросы</title>
 
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/font-awesome/css/font-awesome.css" rel="stylesheet">
 
     <!-- Toastr style -->
-    <link href="css/plugins/toastr/toastr.min.css" rel="stylesheet">
+    <link href="/css/plugins/toastr/toastr.min.css" rel="stylesheet">
 
     <!-- Gritter -->
-    <link href="js/plugins/gritter/jquery.gritter.css" rel="stylesheet">
+    <link href="/js/plugins/gritter/jquery.gritter.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="/css/app.css">
 
     <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 </head>
@@ -128,26 +128,27 @@
                                                 <th class="sorting" style="width: 159.187px;">Device D Time</th>
                                                 <th class="sorting" style="width: 159.187px;">User ID</th>
                                                 <th class="sorting" style="width: 159.187px;">Тип</th>
+                                                <th class="sorting" style="width: 159.187px;">Дата и время запроса</th>
+                                                <th class="sorting" style="width: 159.187px;">IP</th>
                                                 <th class="sorting" style="width: 159.187px;">Удалено</th>
-                                                <th class="sorting" style="width: 159.187px;">Действия</th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                             @foreach($deviceData as $item)
                                                 <tr>
-                                                    <td>{{ $item->guid }}</td>
+                                                    <td><a target="_blank" href="/device-data/{{$item->id}}">{{ $item->guid }}</a></td>
                                                     <td>{{ $item->device_id }}</td>
                                                     <td>{{ $item->device_d_time }}</td>
                                                     <td>{{ $item->user_id }}</td>
                                                     <td>{{ $item->type }}</td>
+                                                    <td>{{ $item->request_time }}</td>
+                                                    <td>{{ $item->ip }}</td>
                                                     <td>
                                                         @if (is_null($item->deleted_at))
                                                             Нет
                                                         @else
                                                             Да
                                                         @endif
-                                                    </td>
-                                                    <td><a target="_blank" href="/device-data/{{$item->id}}">{{ "данные" }}</a>
                                                     </td>
                                                 </tr>
                                             @endforeach
