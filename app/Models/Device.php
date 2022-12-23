@@ -16,5 +16,6 @@ class Device extends Model
      */
     protected $fillable = [
         'id',
+        'serial_num',
     ];
 }

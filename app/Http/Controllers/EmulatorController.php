@@ -31,7 +31,10 @@ class EmulatorController extends Controller
         $data = [];
         $data['GUID'] = $request->get('guid');
         $data['DeviceID'] = $request->get('device_id');
+        $data['SerialNum'] = $request->get('serial_num');
+        $data['CycleID'] = $request->get('cycle_id');
         $data['DeviceDTime'] = $request->get('device_d_time');
+        $data['UserID'] = $request->get('user_id');
 
         if($request->file && $method!=="power") {
             $fileName = $request->file->getClientOriginalName();
@@ -61,7 +64,7 @@ class EmulatorController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://localhost/api/' . $method,
+            CURLOPT_URL => 'http://mtk-mon.loc/api/' . $method,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,

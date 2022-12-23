@@ -9,7 +9,7 @@ servers:
     url: https://virtserver.swaggerhub.com/koneek/MTK-Monitor/0.2
   - url: http://localhost:8090/api/DevStat/v1
     description: Песочница для DeviceAPI
-    
+
 paths:
   /Power:
     post:
@@ -60,8 +60,8 @@ paths:
           content:
             application/json;charset=UTF-8:
               schema:
-                $ref: "#/components/schemas/Error" 
-                  
+                $ref: "#/components/schemas/Error"
+
   /Data:
     post:
       summary: Отправка дсведений о наработке аппарата
@@ -86,9 +86,9 @@ paths:
           content:
             application/json;charset=UTF-8:
               schema:
-                $ref: "#/components/schemas/Error"  
-   
-  /Data/{guid}:  
+                $ref: "#/components/schemas/Error"
+
+  /Data/{guid}:
     delete:
       summary: Удаление события от устройства
       operationId: DataDelete
@@ -111,13 +111,13 @@ paths:
           content:
             application/json;charset=UTF-8:
               schema:
-                $ref: "#/components/schemas/Error"                 
+                $ref: "#/components/schemas/Error"
 
   /Firmwares/{deviceID}:
     get:
       summary: Запрос списка доступных для устройства прошивок
       operationId: FirmwaresList
-      tags: 
+      tags:
         - Device
       parameters:
         - name: deviceID
@@ -141,7 +141,7 @@ paths:
           content:
             application/json;charset=UTF-8:
               schema:
-                $ref: "#/components/schemas/Error"   
+                $ref: "#/components/schemas/Error"
 
   /Status:
     post:
@@ -167,13 +167,13 @@ paths:
           content:
             application/json;charset=UTF-8:
               schema:
-                $ref: "#/components/schemas/Error"  
+                $ref: "#/components/schemas/Error"
 
   /Firmware/{id}:
     get:
       summary: Запрос новой версии, по номеру текущей версии
       operationId: GetFirmaware
-      tags: 
+      tags:
         - Device
       parameters:
         - name: id
@@ -195,7 +195,7 @@ paths:
           content:
             application/json;charset=UTF-8:
               schema:
-                $ref: "#/components/schemas/Error"   
+                $ref: "#/components/schemas/Error"
 
 components:
   schemas:
@@ -216,6 +216,16 @@ components:
           type: integer
           format: int64
           example: 55
+        SerialNum:
+          description: Идентификатор устройства
+          type: string
+          format: int64
+          example: 11
+        CycleID:
+          description: Идентификатор цикла
+          type: integer
+          format: int64
+          example: 11
         DeviceDTime:
           description: Дата и времяб часов на устройстве
           type: string
@@ -226,7 +236,7 @@ components:
           type: integer
           format: int32
           example: 55
-          
+
     Power:
       type: object
       allOf:
@@ -236,7 +246,7 @@ components:
       properties:
         power:
           description: Или включено или выключено
-          type: string            
+          type: string
           enum: [on, off]
           example: on
 
@@ -250,7 +260,7 @@ components:
         DeviceData:
           description: Массив данных от устройства. Каждая строка цикла - отдельный эелемент массива, который будет собираться информацию о цикле непосредственно в ХД
           type: array
-          items: 
+          items:
             type: string
           example: ['старт','стоп']
 
@@ -265,7 +275,7 @@ components:
           format: int32
         message:
           type: string
-          
+
     Firmware:
       type: object
       required:

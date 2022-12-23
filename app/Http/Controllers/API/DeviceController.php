@@ -187,6 +187,8 @@ class DeviceController extends Controller
             [
                 'GUID' => 'required|string|max:36|unique:App\Models\DeviceData,guid',
                 'DeviceID' => 'required|int',
+                'SerialNum' => 'required|string|exists:App\Models\Device,serial_num',
+                'CycleID' => 'int|exists:App\Models\Cycle,id',
                 'DeviceDTime' => 'required|date_format:Y-m-d H:i:s|before_or_equal:' . date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . "+ 12 hours")),
                 'UserID' => 'int',
                 'DeviceData' => 'required|array',
@@ -194,6 +196,10 @@ class DeviceController extends Controller
             [
                 'GUID.required' => 'GUID отсутствует, необходимо указать идентификатор запроса',
                 'DeviceID.required' => 'DeviceID отсутствует, необходимо указать идентификатор устройства',
+                'SerialNum.required' => 'SerialNum отсутствует, необходимо указать серийный номер устройства',
+                'SerialNum.exists' => 'Устройство с таким серийным номером отсутствует в базе данных',
+                'CycleID.int' => 'CycleID должно быть целочисленным значением',
+                'CycleID.exists' => 'Цикл с таким идентификатором отсутствует в базе данных',
                 'DeviceDTime.required' => 'DeviceDTime отсутствует, необходимо указать актуальное время на устройстве',
                 'DeviceData.required' => 'DeviceData  отсутствует, необходимо заполнить массив данных от устройства',
             ]
@@ -213,9 +219,12 @@ class DeviceController extends Controller
             'request_time' => date('Y-m-d H:i:s'),
             'ip' => $request->ip(),
             'device_id' => $request->get('DeviceID'),
+            'serial_num' => $request->get('SerialNum'),
+            'cycle_id' => $request->get('CycleID') ?? null,
             'device_d_time' => $request->get('DeviceDTime'),
             'type' => 'sensor',
             'device_data' => $request->get('DeviceData'),
+            'user_id' => $request->get('UserID'),
         ]);
 
         $data = $request->get('DeviceData');
@@ -223,7 +232,7 @@ class DeviceController extends Controller
         foreach ($data as $item) {
             SensorData::create([
                 'device_id' => $request->get('DeviceID'),
-                'cycle_id' => null, //как мы привяжем к cycle_id?
+                'cycle_id' => $request->get('CycleID') ?? null,
                 'row_id' => $item[0],
                 'date_time' => "2022-12-20 08:20:51", // $item[1],
                 'row_data' => array_slice($item, 2),
@@ -355,13 +364,19 @@ class DeviceController extends Controller
             [
                 'GUID' => 'required|string|max:36|unique:App\Models\DeviceData,guid',
                 'DeviceID' => 'required|int',
+                'SerialNum' => 'required|string|exists:App\Models\Device,serial_num',
+                'CycleID' => 'int|unique:App\Models\Cycle,id',
                 'DeviceDTime' => 'required|date_format:Y-m-d H:i:s|before_or_equal:' . date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . "+ 12 hours")),
-                'UserID' => 'int',
+                'UserID' => 'nullable|int',
                 'DeviceData' => 'required|array',
             ],
             [
                 'GUID.required' => 'GUID отсутствует, необходимо указать идентификатор запроса',
                 'DeviceID.required' => 'DeviceID отсутствует, необходимо указать идентификатор устройства',
+                'SerialNum.required' => 'SerialNum отсутствует, необходимо указать серийный номер устройства',
+                'SerialNum.exists' => 'Устройство с таким серийным номером отсутствует в базе данных',
+                'CycleID.integer' => 'CycleID должно быть целочисленным значением',
+                'CycleID.unique' => 'Цикл с таким идентификатором уже создан в БД по этому устройству. Для записи нового цикла с таким же идентификатором сначала удалите старую запись командой Delete Data',
                 'DeviceDTime.required' => 'DeviceDTime отсутствует, необходимо указать актуальное время на устройстве',
                 'DeviceData.required' => 'DeviceData  отсутствует, необходимо заполнить массив данных от устройства',
             ]
@@ -381,9 +396,12 @@ class DeviceController extends Controller
             'request_time' => date('Y-m-d H:i:s'),
             'ip' => $request->ip(),
             'device_id' => $request->get('DeviceID'),
+            'serial_num' => $request->get('SerialNum'),
+            'cycle_id' => $request->get('CycleID') ?? null,
             'device_d_time' => $request->get('DeviceDTime'),
             'type' => 'log',
             'device_data' => $request->get('DeviceData'),
+            'user_id' => $request->get('UserID'),
         ]);
 
         $number = '';
@@ -429,6 +447,7 @@ class DeviceController extends Controller
         }
 
         $cycle = Cycle::create([
+            'id' => $request->get('CycleID'),
             'number' => $number,
             'started_at' => $cycleStartedAt,
             'ended_at' => $cycleEndedAt ?? null,

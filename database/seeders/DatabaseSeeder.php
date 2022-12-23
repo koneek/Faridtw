@@ -23,13 +23,16 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         Device::create([
-            'id' => 11
+            'id' => 11,
+            'serial_num' => 'abc'
         ]);
         Device::create([
-            'id' => 22
+            'id' => 22,
+            'serial_num' => 'bcd'
         ]);
         Device::create([
-            'id' => 33
+            'id' => 33,
+            'serial_num' => 'cde'
         ]);
     }
 }

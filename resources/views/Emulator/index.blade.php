@@ -82,18 +82,36 @@
                                     </div>
                                     <div class="form-group  row"><label class="col-sm-2 col-form-label">DeviceID</label>
                                         <div class="col-sm-10">
-                                            <input type="text" class="form-control" id="device_id" name="device_id">
-{{--                                            <select class="form-control m-b" id="device_id" name="device_id">--}}
-{{--                                                <option selected disabled hidden>Выбрать аппарат</option>--}}
-{{--                                                @foreach($devices as $device)--}}
-{{--                                                    <option value="{{ $device->id }}">{{ $device->id }}</option>--}}
-{{--                                                @endforeach--}}
+{{--                                            <input type="text" class="form-control" id="device_id" name="device_id">--}}
+{{--                                            <select class="form-control m-b">--}}
+{{--                                                <option selected disabled hidden>Не выбрано</option>--}}
 {{--                                            </select>--}}
+                                            <input type="text" class="form-control" list="cars" id="device_id" name="device_id" />
+                                            <datalist id="cars">
+                                                @foreach($devices as $device)
+                                                    <option value="{{ $device->id }}">{{ $device->id }}</option>
+                                                @endforeach
+                                            </datalist>
+                                        </div>
+                                    </div>
+                                    <div class="form-group  row"><label class="col-sm-2 col-form-label">Serial Number</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="serial_num" name="serial_num">
+                                        </div>
+                                    </div>
+                                    <div class="form-group  row"><label class="col-sm-2 col-form-label">CycleID</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="cycle_id" name="cycle_id">
                                         </div>
                                     </div>
                                     <div class="form-group  row"><label class="col-sm-2 col-form-label">DeviceDTime</label>
                                         <div class="col-sm-10">
                                             <input type="text" class="form-control" name="device_d_time" value="2022-12-20 18:37:29">
+                                        </div>
+                                    </div>
+                                    <div class="form-group  row"><label class="col-sm-2 col-form-label">UserID</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="user_id" name="user_id">
                                         </div>
                                     </div>
 
@@ -182,8 +200,18 @@
             // data: $("#emulate_form").serialize(),
             //or your custom data either as object {foo: "bar", ...} or foo=bar&...
             success: function (data, textStatus, xhr) {
+                console.log(data)
                 $("#response_code").text('Код: '+JSON.parse(data).status)
-                $("#response_message").text('Сообщение: '+ JSON.stringify(JSON.parse(data).messages))
+
+                let messages = JSON.parse(data).messages;
+                $("#response_message").append('<p>' + 'Сообщение: ' + '</p>')
+                for (let key in messages) {
+                    if (messages.hasOwnProperty(key)) {
+                        $("#response_message").append('<p>' + messages[key] + '</p>');
+                    }
+                }
+
+                // $("#response_message").text('Сообщение: '+ JSON.stringify(JSON.parse(data).messages))
             },
             error: function(error, textStatus, xhr){
                 $("#response_code").text('Код: '+error.status)
@@ -191,6 +219,29 @@
             }
         });
     });
+
+    function prettyJ(json) {
+        if (typeof json !== 'string') {
+            json = JSON.stringify(json, undefined, 2);
+        }
+        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+            function (match) {
+                let cls = "\x1b[36m";
+                if (/^"/.test(match)) {
+                    if (/:$/.test(match)) {
+                        cls = "\x1b[34m";
+                    } else {
+                        cls = "\x1b[32m";
+                    }
+                } else if (/true|false/.test(match)) {
+                    cls = "\x1b[35m";
+                } else if (/null/.test(match)) {
+                    cls = "\x1b[31m";
+                }
+                return cls + match + "\x1b[0m";
+            }
+        );
+    }
 
     document.getElementById("file").onchange = function () {
         $("#selected_file").text(this.value.replace(/^.*[\\\/]/, ''))

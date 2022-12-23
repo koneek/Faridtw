@@ -19,6 +19,8 @@ class DeviceData extends Model
         'request_time',
         'ip',
         'device_id',
+        'serial_num',
+        'cycle_id',
         'device_d_time',
         'user_id',
         'type',

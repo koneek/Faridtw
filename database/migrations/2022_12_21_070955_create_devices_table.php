@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('devices', function (Blueprint $table) {
             $table->id();
+            $table->string('serial_num')->nullable();
             $table->timestamps();
         });
     }

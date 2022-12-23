@@ -19,6 +19,8 @@ return new class extends Migration
             $table->dateTime('request_time')->nullable();
             $table->string('ip')->nullable();
             $table->integer('device_id');
+            $table->string('serial_num');
+            $table->integer('cycle_id');
             $table->string('device_d_time');
             $table->integer('user_id')->nullable();
             $table->string('type');
