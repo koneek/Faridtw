@@ -14,5 +14,5 @@
     <a href="https://docs.google.com/document/d/1mgS2YEw1w5KtU2SPmNAOUEKVwLR9ZysYs--PKko56HA/edit?usp=sharing" target="_blank"><i class="fa fa-files-o"></i> <span class="nav-label">Документация</span></a>
 </li>
 <li>
-    <a href="/storage/mtk-mon.yaml" target="_blank"><i class="fa fa-flask"></i> <span class="nav-label">Swagger (YAML)</span></a>
+    <a href="https://disk.yandex.ru/d/QR1pthwOTE0pgg" target="_blank"><i class="fa fa-flask"></i> <span class="nav-label">Swagger (YAML)</span></a>
 </li>
