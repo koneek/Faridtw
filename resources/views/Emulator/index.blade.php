@@ -201,17 +201,23 @@
             //or your custom data either as object {foo: "bar", ...} or foo=bar&...
             success: function (data, textStatus, xhr) {
                 console.log(data)
-                $("#response_code").text('Код: '+JSON.parse(data).status)
-
+                let status = JSON.parse(data).status;
                 let messages = JSON.parse(data).messages;
-                $("#response_message").append('<p>' + 'Сообщение: ' + '</p>')
-                for (let key in messages) {
-                    if (messages.hasOwnProperty(key)) {
-                        $("#response_message").append('<p>' + messages[key] + '</p>');
+
+                $("#response_code").text('Код: '+status)
+                $("#response_message").empty()
+
+                if (status==200) {
+                    $("#response_message").append('<p>' + 'Сообщение: ' + '</p>')
+                    $("#response_message").append('<p>' + messages + '</p>')
+                } else {
+                    $("#response_message").append('<p>' + 'Сообщение: ' + '</p>')
+                    for (let key in messages) {
+                        if (messages.hasOwnProperty(key)) {
+                            $("#response_message").append('<p>' + messages[key] + '</p>');
+                        }
                     }
                 }
-
-                // $("#response_message").text('Сообщение: '+ JSON.stringify(JSON.parse(data).messages))
             },
             error: function(error, textStatus, xhr){
                 $("#response_code").text('Код: '+error.status)

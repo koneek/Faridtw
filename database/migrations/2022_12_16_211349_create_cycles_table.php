@@ -20,6 +20,7 @@ return new class extends Migration
             $table->dateTime('ended_at')->nullable();
             $table->integer('duration')->nullable();
             $table->integer('status')->nullable();
+            $table->foreignId('device_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });

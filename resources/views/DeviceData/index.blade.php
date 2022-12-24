@@ -99,8 +99,8 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <div class="col-sm-4 col-sm-offset-2">
-                                            <button type="submit" class="btn btn-success">Применить</button>
+                                        <div class="col-sm-12 col-sm-offset-2">
+                                            <button type="submit" class="btn btn-success" style="float: right;">Фильтровать</button>
                                         </div>
                                     </div>
                                 </form>
@@ -129,7 +129,7 @@
                                                 <th class="sorting" style="width: 159.187px;">User ID</th>
                                                 <th class="sorting" style="width: 159.187px;">Тип</th>
                                                 <th class="sorting" style="width: 159.187px;">Дата и время запроса</th>
-{{--                                                <th class="sorting" style="width: 159.187px;">IP</th>--}}
+                                                <th class="sorting" style="width: 159.187px;">IP</th>
                                                 <th class="sorting" style="width: 159.187px;">Удалено</th>
                                             </tr>
                                             </thead>
@@ -142,14 +142,8 @@
                                                     <td>{{ $item->user_id }}</td>
                                                     <td>{{ $item->type }}</td>
                                                     <td>{{ $item->request_time }}</td>
-{{--                                                    <td>{{ $item->ip }}</td>--}}
-                                                    <td>
-                                                        @if (is_null($item->deleted_at))
-                                                            Нет
-                                                        @else
-                                                            Да
-                                                        @endif
-                                                    </td>
+                                                    <td>{{ $item->ip }}</td>
+                                                    <td>{{ $item->deleted_at }}</td>
                                                 </tr>
                                             @endforeach
                                             </tbody>

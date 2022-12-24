@@ -20,6 +20,7 @@ class Cycle extends Model
         'ended_at',
         'duration',
         'status',
+        'device_id',
     ];
 
     /**

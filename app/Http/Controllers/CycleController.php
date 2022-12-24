@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cycle;
 use App\Http\Requests\StoreDeviceDataRequest;
 use App\Http\Requests\UpdateDeviceDataRequest;
+use App\Models\Device;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View;
 
@@ -19,7 +20,22 @@ class CycleController extends Controller
     {
         $query = Cycle::query();
 
-        return view("Cycle.index", ["cycles" => $query->get()]);
+        $data = $request->all();
+
+        if (isset($data['number'])) {
+            $query->where('number', $data['number']);
+        }
+        if (isset($data['device_id'])) {
+            $query->where('device_id', $request->get('device_id'));
+        }
+        if (isset($data['device_d_time'])) {
+            $query->where('device_d_time', $request->get('device_d_time'));
+        }
+        if (isset($data['user_id'])) {
+            $query->where('user_id', $request->get('user_id'));
+        }
+
+        return view("Cycle.index", ["cycles" => $query->get(), "devices" => Device::all()]);
     }
 
     /**

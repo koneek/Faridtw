@@ -29,6 +29,7 @@ class EmulatorController extends Controller
         $method = $request->get('method');
 
         $data = [];
+        $data['ip'] = $request->ip();
         $data['GUID'] = $request->get('guid');
         $data['DeviceID'] = $request->get('device_id');
         $data['SerialNum'] = $request->get('serial_num');
@@ -64,7 +65,7 @@ class EmulatorController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://mtk-mon.loc/api/' . $method,
+            CURLOPT_URL => 'http://localhost/api/' . $method,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
